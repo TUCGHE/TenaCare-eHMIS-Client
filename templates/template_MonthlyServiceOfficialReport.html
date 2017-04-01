@@ -1,0 +1,125 @@
+﻿<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<div class="page-title">{{title}}</div>
+<div ng-app="eHMISApp" ng-controller="serviceReportCtrl">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-3">
+                    <label class="common-font">{{dataEntry['period']}}:</label>
+                    <select data-ng-options="p.name for p in periodOptions" ng-model="selectedPeriod"
+                            ng-change="ChangePeriod()" style="height:30px;" />
+                </div>
+                <div class="col-sm-9">
+                    <span ng-show="showMonthlyReport" style="padding-left: 0px;">
+                        <label class="common-font">{{dataEntry['startMonth']}}:</label>
+                        <select data-ng-options="o.name for o in options" data-ng-model="selectedMonth" style="height:30px;" />
+                        <label class="common-font">{{dataEntry['endMonth']}}:</label>
+                        <select data-ng-options="o.name for o in options" data-ng-model="selectedMonthEnd" style="height:30px;" />
+                        <label class="common-font">{{dataEntry['fiscalYear']}}:</label>
+                        <input type="number" name="month1" style="width:90px;height:30px;"
+                               max="2020" min="2001" ng-model="selectedYear" />
+                    </span>
+                    <span ng-show="showQuarterReport" style="padding-left: 0px;">
+                        <label class="common-font">{{dataEntry['startQuarter']}}:</label>
+                        <select data-ng-options="o.name for o in quarterOptions" data-ng-model="selectedQuarter" style="height:30px;" />
+                        <label class="common-font">{{dataEntry['endQuarter']}}:</label>
+                        <select data-ng-options="o.name for o in quarterOptions" data-ng-model="quarterEnd" style="height:30px;" />
+                        <label class="common-font">{{dataEntry['fiscalYear']}}:</label>
+                        <input type="number" name="month1" style="width:90px;height:30px;" max="2020" min="2001" ng-model="selectedYear" />
+                        <br />
+                        <input class="btn-setLocation" type="checkbox" name="showQuartelyelements"
+                               ng-model="quarterCheckedState" ng-init="quarterCheckedState=false" />{{dataEntry['showOnlyQuarterlyDataElements']}}
+                    </span>
+                    <span ng-show="showAnnualReport" style="padding-left: 0px;">
+                        <label>Year:</label><input type="number" name="month1" style="width:90px;height:30px;" max="2020" min="2001" ng-model="selectedYear" />
+                    </span>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-12">
+                    <input class="btn btn-primary navspecial" type="submit" value={{dataEntry['generate']}} ng-click="getServiceReport(3,selectedMonth.value,selectedMonthEnd.value,0, 0,selectedYear, checkedState, false)" ng-show="showMonthlyReport" style="width:80px" /><!--Monthly-->
+                    <input class="btn btn-primary navspecial" type="submit" value={{dataEntry['generate']}} ng-click="getServiceReport(3,0,0,selectedQuarter.value, quarterEnd.value,selectedYear, checkedState, quarterCheckedState)" ng-show="showQuarterReport" style="width:80px" /><!--Quarterly-->
+                    <input class="btn btn-primary navspecial" type="submit" value={{dataEntry['generate']}} ng-click="getServiceReport(3,0,0,0,0,selectedYear, checkedState, false)" ng-show="showAnnualReport" style="width:80px" /><!--Annual-->
+                    <button class="btn btn-primary navspecial" onclick="selectAndCopyElement('selection')">{{dataEntry['copyWithFormat']}}</button>
+                    <!--<span style="padding-left: 5px;">-->
+                    <input class="btn-setLocation" type="checkbox" name="enableCache" ng-model="checkedState" ng-init="checkedState=true" />{{dataEntry['enableCache']}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default pnlServiceEntry">
+        <div class="panel-body">
+            <div class="col-sm-8" ng-if="!showReport">
+            </div>
+            <div id="selection" class="row" ng-if="showReport">
+                <div class="loading-dialog" data-loading="">
+                </div>
+
+                <table id="reportTable" class="table table-condensed table-responsive" style="background-color:white; padding:0px" width:"100%">
+                    <thead class="thead-default">
+                        <tr>
+                            <th colspan="100">
+                                <!--<div style="float:left; width:50%">
+                                    <img src="/web-app/img/FederalMinistryLogo.jpg" alt="FederalministryLogo" />
+                                </div>-->
+                                <div style="float:left; width:50%; font-size:12px; font-family:'Times New Roman'; color:#1E5B78">
+                                    {{LocationName}} <br /> {{reportString}} <br />  {{dataEntry['year']}}: {{selectedYear}}, {{reportType}}
+                                </div>
+                            </th>
+                        </tr>
+                        <tr ng-show="serviceHeader" style="background-color:#4E6868; color:#DFEDED">
+                            <th colspan="2">  </th>
+                            <th colspan="4"> {{dataEntry['governmentGoFmoh']}}</th>
+                            <th colspan="4"> {{dataEntry['otherGovernmentOgo']}}s</th>
+                            <th colspan="4"> {{dataEntry['privateForProfitFacilitiesPep']}}</th>
+                            <th colspan="4"> {{dataEntry['privateNotForProfitFacilitiesPnfp']}}</th>
+                            <th ng-repeat="titles in serviceReportdata[3] track by $index"> {{titles}} </th>
+                        <tr> <th style="background-color:#4E6868; color:#DFEDED" ng-repeat="columnName in serviceReportdata[2] track by $index" ng-if="columnName != 'Readonly'">{{columnName}}</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="x in serviceReportdata[1]" end-of-repeat-directive>
+                            <td class="tableFormat" ng-repeat="columnName in serviceReportdata[0]" ng-if="x.Readonly == true && columnName != 'Readonly'">
+                                <div ng-if="x[columnName] != -999">
+                                    {{x[columnName]}}
+                                </div>
+                            </td>
+                            <td ng-repeat="columnName in serviceReportdata[0]" ng-if="x.Readonly == false && columnName != 'Readonly'">
+                                <div ng-if="x[columnName] != -999">
+                                    {{x[columnName]}}
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,379 @@
+﻿<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>TenaCare eHMIS</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Custom Login Form Styling</title>
+    <meta name="description" content="Custom Login Form Styling with CSS3" />
+    <meta name="keywords" content="css3, login, form, custom, input, submit, button, html5, placeholder" />
+    <meta name="author" content="Codrops" />
+    <link rel="shortcut icon" href="../favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <!--<link rel="stylesheet" href="js/libs/bootstrap/dist/css/bootstrap.min.css" />-->
+    <!--<script src="js/modernizr.custom.63321.js"></script>-->
+    <!-- 3rd-Party SCRIPTS -->
+    <script src="js/vendor/js.cookie.js"></script>
+    <script src="js/libs/jquery/dist/jquery.min.js"></script>
+    <script src="js/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="js/libs/angular/angular.min.js"></script>
+    <script src="js/libs/angular-ui-grid/ui-grid.min.js"></script>
+    <script src="js/libs/angular-route/angular-route.min.js"></script>
+    <script src="js/libs/bootstrap-switch/dist/js/bootstrap-switch.min.js"></script>
+    <script src="js/libs/dirPagination/dirPagination.js"></script>
+
+    <!-- NVD3 Libraries...-->
+    <script src="js/libs/nvd3/angular-nvd3.js"></script>
+    <script src="js/libs/nvd3/d3.min.js"></script>
+    <script src="js/libs/nvd3/nv.d3.min.js"></script>
+    <!-- NVD3 Libraries...-->
+    <!-- <script src="js/modal_alert.js"></script>-->
+
+    <script src="js/libs/angular-leaflet-directive/angular-leaflet-directive.js"></script>
+    <script src="js/libs/leaflet/leaflet.js"></script>
+
+
+    <script src="js/mainApp.js"></script>
+    <script src="js/controllers/controller_authentication.js"></script>
+    <script src="js/services/service_Language.js"></script>
+    <script src="js/services/service_HostConfig.js"></script>
+
+    <script src="js/services/service_authentication.js"></script>
+    <script src="js/libs/angular-loading-bar/build/loading-bar.min.js"></script>
+    <!--[if lte IE 7]><style>.main{display:none;} .support-note .note-ie{display:block;}</style><![endif]-->
+    <style>
+        body {
+            background: #e1c192 url(images/wood_pattern.jpg);
+        }
+    </style>
+</head>
+<body bgcolor="#f0f5dc">
+    <div class="container" ng-app="eHMISApp" ng-controller="AuthenticationCtrl" ng-cloak=ng-cloak>
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <center>
+                    <br />
+                    <table width="1000" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td background="images/top.jpg" height="60px">
+                                <!--<img src="images/top.jpg" />-->
+                                <span padding-left: 0.5cm;>
+                                    <button style="font-size: 8px; background-color: {{mainButtonColor.english}}" 
+                                            class="button button2" ng-click="setLanguage('english')">English</button>
+                                    <button style="font-size: 8px; background-color: {{mainButtonColor.amharic}}" 
+                                            class="button button2" ng-click="setLanguage('amharic')">አማርኛ</button>
+                                    <button style="font-size: 8px; background-color: {{mainButtonColor.french}}"  
+                                            class="button button2" ng-click="setLanguage('french')">français</button>
+                                    <button style="font-size: 8px; background-color: {{mainButtonColor.spanish}}" 
+                                            class="button button2" ng-click="setLanguage('spanish')">Español</button>
+                                    <button style="font-size: 8px; background-color: {{mainButtonColor.portuguese}}"  
+                                            class="button button2" ng-click="setLanguage('portuguese')">Português</button>
+                                    <button style="font-size: 8px; background-color: {{mainButtonColor.arabic}}"  
+                                            class="button button2" ng-click="setLanguage('arabic')">عربى</button>                                    
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <img src="images/header.jpg" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <script src="js/jssor.slider-22.2.16.min.js" type="text/javascript"></script>
+                                <script type="text/javascript">
+                                    jssor_1_slider_init = function () {
+                                        var jssor_1_SlideoTransitions = [
+                                          [{ b: 0, d: 600, y: -290, e: { y: 27 } }],
+                                          [{ b: 0, d: 1000, y: 185 }, { b: 1000, d: 500, o: -1 }, { b: 1500, d: 500, o: 1 }, { b: 2000, d: 1500, r: 360 }, { b: 3500, d: 1000, rX: 30 }, { b: 4500, d: 500, rX: -30 }, { b: 5000, d: 1000, rY: 30 }, { b: 6000, d: 500, rY: -30 }, { b: 6500, d: 500, sX: 1 }, { b: 7000, d: 500, sX: -1 }, { b: 7500, d: 500, sY: 1 }, { b: 8000, d: 500, sY: -1 }, { b: 8500, d: 500, kX: 30 }, { b: 9000, d: 500, kX: -30 }, { b: 9500, d: 500, kY: 30 }, { b: 10000, d: 500, kY: -30 }, { b: 10500, d: 500, c: { x: 87.50, t: -87.50 } }, { b: 11000, d: 500, c: { x: -87.50, t: 87.50 } }],
+                                          [{ b: 0, d: 600, x: 410, e: { x: 27 } }],
+                                          [{ b: -1, d: 1, o: -1 }, { b: 0, d: 600, o: 1, e: { o: 5 } }],
+                                          [{ b: -1, d: 1, c: { x: 175.0, t: -175.0 } }, { b: 0, d: 800, c: { x: -175.0, t: 175.0 }, e: { c: { x: 7, t: 7 } } }],
+                                          [{ b: -1, d: 1, o: -1 }, { b: 0, d: 600, x: -570, o: 1, e: { x: 6 } }],
+                                          [{ b: -1, d: 1, o: -1, r: -180 }, { b: 0, d: 800, o: 1, r: 180, e: { r: 7 } }],
+                                          [{ b: 0, d: 1000, y: 80, e: { y: 24 } }, { b: 1000, d: 1100, x: 570, y: 170, o: -1, r: 30, sX: 9, sY: 9, e: { x: 2, y: 6, r: 1, sX: 5, sY: 5 } }],
+                                          [{ b: 2000, d: 600, rY: 30 }],
+                                          [{ b: 0, d: 500, x: -105 }, { b: 500, d: 500, x: 230 }, { b: 1000, d: 500, y: -120 }, { b: 1500, d: 500, x: -70, y: 120 }, { b: 2600, d: 500, y: -80 }, { b: 3100, d: 900, y: 160, e: { y: 24 } }],
+                                          [{ b: 0, d: 1000, o: -0.4, rX: 2, rY: 1 }, { b: 1000, d: 1000, rY: 1 }, { b: 2000, d: 1000, rX: -1 }, { b: 3000, d: 1000, rY: -1 }, { b: 4000, d: 1000, o: 0.4, rX: -1, rY: -1 }]
+                                        ];
+
+                                        var jssor_1_options = {
+                                            $AutoPlay: true,
+                                            $Idle: 2000,
+                                            $CaptionSliderOptions: {
+                                                $Class: $JssorCaptionSlideo$,
+                                                $Transitions: jssor_1_SlideoTransitions,
+                                                $Breaks: [
+                                                  [{ d: 2000, b: 1000 }]
+                                                ]
+                                            },
+                                            $ArrowNavigatorOptions: {
+                                                $Class: $JssorArrowNavigator$
+                                            },
+                                            $BulletNavigatorOptions: {
+                                                $Class: $JssorBulletNavigator$
+                                            }
+                                        };
+
+                                        var jssor_1_slider = new $JssorSlider$("jssor_1", jssor_1_options);
+
+                                        /*responsive code begin*/
+                                        /*remove responsive code if you don't want the slider scales while window resizing*/
+                                        function ScaleSlider() {
+                                            var refSize = jssor_1_slider.$Elmt.parentNode.clientWidth;
+                                            if (refSize) {
+                                                refSize = Math.min(refSize, 1000);
+                                                jssor_1_slider.$ScaleWidth(refSize);
+                                            }
+                                            else {
+                                                window.setTimeout(ScaleSlider, 30);
+                                            }
+                                        }
+                                        ScaleSlider();
+                                        $Jssor$.$AddEvent(window, "load", ScaleSlider);
+                                        $Jssor$.$AddEvent(window, "resize", ScaleSlider);
+                                        $Jssor$.$AddEvent(window, "orientationchange", ScaleSlider);
+                                        /*responsive code end*/
+                                    };
+                                </script>
+                                <style>
+                                    /* jssor slider bullet navigator skin 01 css */
+                                    /*
+                                    .jssorb01 div           (normal)
+                                    .jssorb01 div:hover     (normal mouseover)
+                                    .jssorb01 .av           (active)
+                                    .jssorb01 .av:hover     (active mouseover)
+                                    .jssorb01 .dn           (mousedown)
+                                    */
+                                    .jssorb01 {
+                                        position: absolute;
+                                    }
+
+                                        .jssorb01 div, .jssorb01 div:hover, .jssorb01 .av {
+                                            position: absolute;
+                                            /* size of bullet elment */
+                                            width: 12px;
+                                            height: 12px;
+                                            filter: alpha(opacity=70);
+                                            opacity: .7;
+                                            overflow: hidden;
+                                            cursor: pointer;
+                                            border: #000 1px solid;
+                                        }
+
+                                        .jssorb01 div {
+                                            background-color: gray;
+                                        }
+
+                                            .jssorb01 div:hover, .jssorb01 .av:hover {
+                                                background-color: #d3d3d3;
+                                            }
+
+                                        .jssorb01 .av {
+                                            background-color: #fff;
+                                        }
+
+                                        .jssorb01 .dn, .jssorb01 .dn:hover {
+                                            background-color: #555555;
+                                        }
+
+                                    /* jssor slider arrow navigator skin 02 css */
+                                    /*
+                                    .jssora02l                  (normal)
+                                    .jssora02r                  (normal)
+                                    .jssora02l:hover            (normal mouseover)
+                                    .jssora02r:hover            (normal mouseover)
+                                    .jssora02l.jssora02ldn      (mousedown)
+                                    .jssora02r.jssora02rdn      (mousedown)
+                                    .jssora02l.jssora02lds      (disabled)
+                                    .jssora02r.jssora02rds      (disabled)
+                                    */
+                                    .jssora02l, .jssora02r {
+                                        display: block;
+                                        position: absolute;
+                                        /* size of arrow element */
+                                        width: 55px;
+                                        height: 55px;
+                                        cursor: pointer;
+                                        background: url('img/a02.png') no-repeat;
+                                        overflow: hidden;
+                                    }
+
+                                    .jssora02l {
+                                        background-position: -3px -33px;
+                                    }
+
+                                    .jssora02r {
+                                        background-position: -63px -33px;
+                                    }
+
+                                    .jssora02l:hover {
+                                        background-position: -123px -33px;
+                                    }
+
+                                    .jssora02r:hover {
+                                        background-position: -183px -33px;
+                                    }
+
+                                    .jssora02l.jssora02ldn {
+                                        background-position: -3px -33px;
+                                    }
+
+                                    .jssora02r.jssora02rdn {
+                                        background-position: -63px -33px;
+                                    }
+
+                                    .jssora02l.jssora02lds {
+                                        background-position: -3px -33px;
+                                        opacity: .3;
+                                        pointer-events: none;
+                                    }
+
+                                    .jssora02r.jssora02rds {
+                                        background-position: -63px -33px;
+                                        opacity: .3;
+                                        pointer-events: none;
+                                    }
+                                </style>
+                                <div id="jssor_1" style="position:relative;margin:0 auto;top:0px;left:0px;width:1000px;height:440px;overflow:hidden;visibility:hidden;">
+                                    <!-- Loading Screen -->
+                                    <div data-u="loading" style="position:absolute;top:0px;left:0px;background-color:rgba(0,0,0,0.7);">
+                                        <div style="filter: alpha(opacity=70); opacity: 0.7; position: absolute; display: block; top: 0px; left: 0px; width: 100%; height: 100%;"></div>
+                                        <div style="position:absolute;display:block;background:url('img/loading.gif') no-repeat center center;top:0px;left:0px;width:100%;height:100%;"></div>
+                                    </div>
+                                    <div data-u="slides" style="cursor:default;position:relative;top:0px;left:0px;width:1000px;height:440px;overflow:hidden;">
+                                        <div>
+                                            <img data-u="image" src="img/0.jpg" width="1000" height="440" />
+
+                                        </div>
+                                        <div>
+                                            <img data-u="image" src="img/1.jpg" />
+
+                                        </div>
+                                        <div>
+                                            <img data-u="image" src="img/2.jpg" />
+
+                                        </div>
+
+                                        <a data-u="any" href="http://www.jssor.com" style="display:none">Image Slider</a>
+
+                                        <div data-p="112.50">
+                                            <img data-u="image" src="img/3.jpg" />
+
+                                        </div>
+                                        <div data-p="112.50">
+                                            <img data-u="image" src="img/4.jpg" />
+
+                                        </div>
+                                    </div>
+                                    <div data-u="navigator" class="jssorb01" style="bottom:16px;right:16px;">
+                                        <div data-u="prototype" style="width:12px;height:12px;"></div>
+                                    </div>
+                                    <!-- Arrow Navigator -->
+                                    <span data-u="arrowleft" class="jssora02l" style="top:0px;left:8px;width:55px;height:55px;" data-autocenter="2"></span>
+                                    <span data-u="arrowright" class="jssora02r" style="top:0px;right:8px;width:55px;height:55px;" data-autocenter="2"></span>
+                                </div>
+                                <script type="text/javascript">jssor_1_slider_init();</script>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td background="images/bottom.png">
+                                <center>
+                                    <table width="450" border="0" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td>
+                                                <div class="container">
+
+                                                    <section class="main">
+                                                        <form class="form-2">                                                           
+                                                            <h1><span class="log-in">{{userPage['pleaselogin']}}</span></h1>
+                                                            <p class="float">
+                                                                <label for="login"><i class="icon-user"></i>{{userPage['userName']}}</label>
+                                                                <input type="text" id="username" placeholder="Login ID" />
+                                                            </p>
+                                                            <p class="float">
+                                                                <label for="password"><i class="icon-lock"></i>{{userPage['password']}}</label>
+                                                                <input type="password" id="password" placeholder="Enter Password" class="showpassword" />
+                                                            </p>
+                                                            <p class="clearfix">
+                                                                <button class="sign-up" ng-click="login()" id="btnLogin">{{userPage['login']}}</button>
+                                                                <!--<input type="submit" name="submit" value="Log in" />-->
+                                                            </p>
+                                                        </form>
+                                                    </section>
+
+                                                </div>
+                                                <!-- jQuery if needed -->
+                                                <!--<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>-->
+                                                <script src="js/libs/jquery/dist/jquery.min.js"></script>
+                                                <script type="text/javascript">
+                                                    $(function () {
+                                                        var showPasswdText = angular.element(document.querySelector('[ng-controller="AuthenticationCtrl"]')).scope().userPage['showpassword'];
+                                                        $(".showpassword").each(function (index, input) {
+                                                            var $input = $(input);
+                                                            $("<p class='opt'/>").append(
+                                                                $("<input type='checkbox' class='showpasswordcheckbox' id='showPassword' />").click(function () {
+                                                                    var change = $(this).is(":checked") ? "text" : "password";
+                                                                    var rep = $("<input placeholder='Password' type='" + change + "' />")
+                                                                        .attr("id", $input.attr("id"))
+                                                                        .attr("name", $input.attr("name"))
+                                                                        .attr('class', $input.attr('class'))
+                                                                        .val($input.val())
+                                                                        .insertBefore($input);
+                                                                    $input.remove();
+                                                                    $input = rep;
+                                                                })
+                                                            ).append($("<label for='showPassword'/>").text(showPasswdText)).insertAfter($input.parent());
+                                                        });
+
+                                                        $('#showPassword').click(function () {
+                                                            if ($("#showPassword").is(":checked")) {
+                                                                $('.icon-lock').addClass('icon-unlock');
+                                                                $('.icon-unlock').removeClass('icon-lock');
+                                                            } else {
+                                                                $('.icon-unlock').addClass('icon-lock');
+                                                                $('.icon-lock').removeClass('icon-unlock');
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </center>
+                            </td>
+                        </tr>
+                    </table>
+                </center>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<div class="page-title">{{siteSetting['mainSiteTitle']}}</div>
+<div ng-app="eHMISApp" ng-controller="locationCtrl" id="grad1">
+    <div class="container-fluid">
+        <div class="row row-eq-height">
+            <div class="col-sm-5 topSetLocationSiteSetting" style="border:0px;">
+                <div style="padding-bottom:5px;">
+                    <span style="white-space: normal;">
+                        <b>
+                            <label>
+                                <input type="text"
+                                       ng-model="searchedFacilities"
+                                       ng-model-options="{debounce: 500}"
+                                       ng-minlength="3" />
+                            </label>
+                            <button type="button" class="btn btn-success btn-responsive btn-setLocation"
+                                    ng-click="getSearchedFacilities(searchedFacilities)"
+                                    style="white-space: normal;">
+                                {{siteSetting['searchFacilities']}}
+                            </button>
+                        </b>
+                    </span>
+                </div>
+                <div style="padding-bottom:5px;">
+                    <button type="button" class="btn btn-success btn-responsive btn-setLocation"
+                            ng-click="saveMainLocationId(mainLocationIdToSet)"
+                            style="white-space: normal;">
+                        {{siteSetting['clickToSetLocation']}}: {{ selectedFacilityName }}
+                    </button>
+                </div>
+            </div>
+            <div class="col-sm-7 topSetLocationSiteSetting"
+                 style="padding:0px; margin-bottom: 0px; margin-top: 0px; border:0px;"
+                 ng-show="showFacilityTable">
+                <div style="position:absolute; bottom:0px">
+                    <label>
+                        <span><b>{{siteSetting['show']}}</b></span>
+                        <input type="text"
+                               ng-model="entriesToShow"
+                               value="500" style="width:75px;" /><span><b>{{siteSetting['entries']}}</b></span>
+                    </label>
+
+                    <span style="padding-left:10px">
+                        <input type="checkbox" name="showall"
+                               ng-model="showall" ng-checked="showall"
+                               ng-click="checkStateChanged()"><label>{{siteSetting['showAll']}}</label>
+                        <span ng-show="showall" style="color:red">{{siteSetting['warningThisMayTakeALongTime']}}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row row-eq-height">
+            <div class="col-sm-5 pnlSiteSetting">
+                <span>
+                    <img src="img/fmoh.png" width="30" height="30">
+                </span>
+                <span class="btn btn-primary btn-siteSetting" ng-click="getChildren(88, 11, -1, 'National')"
+                      style="white-space: normal;">
+                    <b>{{siteSetting['national']}}  </b>
+                </span>
+                <ul class="customReport customLevel0Report" style="padding-left: 20px;">
+                    <li ng-repeat="level0 in regionLevel">
+                        <span>
+                            <img src="img/{{level0.ChildId}}.jpg" width="20" height="20">
+                        </span>
+                        <span ng-show="NoParentFacility[level0.ChildId]==1">
+                            <img ng-click="getChildren(level0.ChildId, level0.FacilityType, 0, level0.ChildName)"
+                                 src="img/plus.png" width="20" height="20"
+                                 ng-show="(level0ExpandChildren[level0.ChildId] != true)">
+                            <img ng-click="getChildren(level0.ChildId, level0.FacilityType, 0, level0.ChildName)"
+                                 src="img/minus.png" width="20" height="20"
+                                 ng-show="(level0ExpandChildren[level0.ChildId] == true)">
+                        </span>
+                        <span ng-show="NoParentFacility[level0.ChildId]!=1">
+                            <img src="img/noChild.png" width="20" height="20" style="background-color:red;">
+                        </span>
+                        <span ng-click="getChildren(level0.ChildId, level0.FacilityType, 0, level0.ChildName)">
+                            <button type="button" class="btn btn-primary btn-siteSetting" id="level0">
+                                {{ level0.ChildName }}
+                            </button>
+                        </span> <!-- The Region got Clicked..level 0 -->
+                        <div ng-show="level0ExpandChildren[level0.ChildId]">
+                            <ul class="customReport">
+                                <li ng-repeat="level1 in children[level0.ChildId]">
+                                    <span ng-show="NoParentFacility[level1.ChildId]==1">
+                                        <img ng-click="getChildren(level1.ChildId, level1.FacilityType, 1, level1.ChildName)"
+                                             src="img/plus.png" width="20" height="20"
+                                             ng-show="(level1ExpandChildren[level1.ChildId] != true)">
+                                        <img ng-click="getChildren(level1.ChildId, level1.FacilityType, 1, level1.ChildName)"
+                                             src="img/minus.png" width="20" height="20"
+                                             ng-show="(level1ExpandChildren[level1.ChildId] == true)">
+                                    </span>
+                                    <span ng-show="NoParentFacility[level1.ChildId]!=1">
+                                        <img src="img/noChild.png" width="20" height="20" class="imgNoChild">
+                                    </span>
+                                    <span ng-click="getChildren(level1.ChildId, level1.FacilityType, 1, level1.ChildName)">
+                                        <!-- Either The Zone or the Woreda get clicked -->
+                                        <button type="button" class="btn btn-primary btn-siteSetting" id="level1">
+                                            {{ level1.ChildName }}
+                                        </button>
+                                    </span> <!-- The Region got Clicked..level 0 -->
+                                    <div ng-show="level1ExpandChildren[level1.ChildId]">
+                                        <ul class="customReport">
+                                            <li ng-repeat="level2 in children[level1.ChildId]">
+                                                <span ng-show="NoParentFacility[level2.ChildId]==1">
+                                                    <img ng-click="getChildren(level2.ChildId, level2.FacilityType, 2, level2.ChildName)"
+                                                         src="img/plus.png" width="20" height="20"
+                                                         ng-show="(level2ExpandChildren[level2.ChildId] != true)">
+                                                    <img ng-click="getChildren(level2.ChildId, level2.FacilityType, 2, level2.ChildName)"
+                                                         src="img/minus.png" width="20" height="20"
+                                                         ng-show="(level2ExpandChildren[level2.ChildId] == true)">
+                                                </span>
+                                                <span ng-show="NoParentFacility[level2.ChildId]!=1">
+                                                    <img src="img/noChild.png" width="20" height="20" class="imgNoChild">
+                                                </span>
+                                                <span ng-click="getChildren(level2.ChildId, level2.FacilityType, 2, level2.ChildName)" id="level2">
+                                                    <!-- Woreda get clicked -->
+                                                    <button type="button" class="btn btn-primary btn-siteSetting" id="level2">
+                                                        {{ level2.ChildName }}
+                                                    </button>
+                                                </span>
+                                                <div ng-show="level2ExpandChildren[level2.ChildId]">
+                                                    <ul class="customReport">
+                                                        <li ng-repeat="level3 in children[level2.ChildId]">
+                                                            <span ng-show="NoParentFacility[level3.ChildId]==1">
+                                                                <img ng-click="getChildren(level3.ChildId, level3.FacilityType, 3, level3.ChildName)"
+                                                                     src="img/plus.png" width="20" height="20"
+                                                                     ng-show="(level3ExpandChildren[level3.ChildId] != true)">
+                                                                <img ng-click="getChildren(level3.ChildId, level3.FacilityType, 3, level3.ChildName)"
+                                                                     src="img/minus.png" width="20" height="20"
+                                                                     ng-show="(level3ExpandChildren[level3.ChildId] == true)">
+                                                            </span>
+                                                            <span ng-show="NoParentFacility[level3.ChildId]!=1">
+                                                                <img src="img/noChild.png" width="20" height="20" class="imgNoChild">
+                                                            </span>
+                                                            <span ng-click="getChildren(level3.ChildId, level3.FacilityType,3, level3.ChildName)" id="level3">
+                                                                <button type="button" class="btn btn-primary btn-siteSetting" id="level2">
+                                                                    {{ level3.ChildName }}
+                                                                </button>
+                                                            </span>
+                                                            <div ng-show="level3ExpandChildren[level3.ChildId]">
+                                                                <ul class="customReport">
+                                                                    <li ng-repeat="level4 in children[level3.ChildId]">
+                                                                        <span ng-show="NoParentFacility[level4.ChildId]!=1">
+                                                                            <img src="img/noChild.png" width="20" height="20" class="imgNoChild">
+                                                                        </span>
+                                                                        <span ng-click="getChildren(level4.ChildId, level4.FacilityType,4, level4.ChildName)" id="level4">
+                                                                            <button type="button" class="btn btn-primary btn-siteSetting" id="level4">
+                                                                                {{ level4.ChildName }}
+                                                                            </button>
+                                                                        </span>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-sm-7 pnlSiteSetting" ng-if="!showFacilityTable">
+            </div>
+            <div class="col-sm-7 pnlSiteSetting" ng-if="showFacilityTable">
+                <table id="reportTable" width:"100%"
+                       style="padding:0px" class="table table-hover table-responsive">
+                    <thead class="thead-default">
+                        <tr>
+                            <th ng-repeat="columnName in searchedFacilityColumns" class="info"
+                                style="height:50px"
+                                ng-click="sort(columnName)">
+                                {{columnName}}
+                                <span class="glyphicon sort-icon" ng-show="sortKey==columnName"
+                                      ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr dir-paginate="row in searchedFacilitiesResult|orderBy:sortKey:reverse|itemsPerPage:showItemsPerPage"
+                            ng-click="locationToSet(row['FacilityTypeId'], row['FacilityName'])">
+                            <td ng-repeat="columnName in searchedFacilityColumns" style="background-color:azure">
+                                <button type="button" class="btn btn-primary btn-siteSetting">
+                                    {{row[columnName]}}
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row row-eq-height">
+            <div class="col-sm-5"></div>
+            <div class="col-sm-7 topSetLocationSiteSetting"
+                 style="padding:0px; margin-bottom: 0px; margin-top: 0px; border:0px;"
+                 ng-show="showFacilityTable">
+                <dir-pagination-controls max-size="100"
+                                         direction-links="true"
+                                         boundary-links="true"
+                                         style="padding:0px; margin-top: 0px;
+                                                    margin-bottom: 0px; white-space: normal; ">
+                </dir-pagination-controls>
+            </div>
+        </div>
+        <div class="row row-eq-height">
+            <div class="col-sm-12 pnlSiteSetting">
+                <div ng-controller="mapController">
+                    {{siteSetting['map']}}
+                    <leaflet width="100%" height="500px" center="center" geojson="geojson"></leaflet>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

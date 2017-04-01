@@ -1,0 +1,131 @@
+﻿<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<body ng-app="eHMISApp" ng-controller="backupAndRestore">
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2 class="panel-title">{{backupAndRestore['backupAndRestore']}}</h2><br />
+            <div class="row">
+
+                <div class="radio-inline" style="padding-left:10em; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:GrayText">
+                    <label><input type="radio" name="optradio" value="backup" class="radio" ng-model="display">{{backupAndRestore['backupDatabase']}}</label>
+                </div>
+                <div class="radio-inline" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:GrayText">
+                    <label><input type="radio" name="optradio" value="restore" ng-model="display">{{backupAndRestore['restoreDatabase']}}</label>
+                </div>
+                <div class="radio-inline" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:GrayText">
+                    <label><input type="radio" name="optradio" value="schedule" ng-model="display" ng-click="getlistofTask()">{{backupAndRestore['scheduleBackupJobs']}}</label>
+                </div>
+
+            </div>
+        </div>
+        <div class="panel-body" style="max-height:790px;overflow-y: auto;overflow-x: hidden;">
+            <div class="row">
+                <div class="panel-body" ng-show="display=='backup'">
+                    <div class="col-xs-2">
+                        <label for="xsType" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray"> {{backupAndRestore['database']}}</label>
+                        <select ng-model="databaseName" class="form-control" id="xsType">
+                            <option value="eHMIS">{{backupAndRestore['ehmis']}}</option>
+
+                        </select><br />
+                        <button type="button" class="btn btn-success" id="save_facility" ng-click="startDataBaseBackup(databaseName)">
+                            <i class="glyphicon glyphicon-plus-sign"></i> {{backupAndRestore['startBackupDatabase']}}
+                        </button>
+                    </div><br />
+                    <div class="col-xs-2">
+
+
+                    </div>
+
+                </div>      
+                <div class="edit-user-panel col-md-5" ng-show="display=='schedule'">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            {{titleName}}
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label for="xsType" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray"> {{backupAndRestore['database']}}</label>
+                                <select ng-model="databaseName" class="form-control" id="xsType">
+                                    <option value="eHMIS">{{backupAndRestore['ehmis']}}</option>
+                                </select>
+                                <label for="xsType" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray"> {{backupAndRestore['userName']}}</label>
+                                <input type="text" class="form-control" ng-model="userName">
+                                <label for="xsType" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray"> {{backupAndRestore['password']}}</label>
+                                <input type="password" class="form-control" ng-model="password">
+                                <label for="xsType" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray"> {{backupAndRestore['backupPeriod']}}</label>
+                                <select class="form-control" data-ng-options="o.name for o in periodOptions"  data-ng-model="Period"></select>
+                                <label ng-show="Period.value == 1 || Period.value == 2" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray"> {{backupAndRestore['day']}}</label>
+                                <select class="form-control" data-ng-options="o.name for o in dayoptions" ng-show="Period.value == 1" data-ng-model="Day"></select>
+                                <select class="form-control" data-ng-options="o.name for o in options"  ng-show="Period.value == 2" data-ng-model="Day"></select>
+                                <label ng-show="Period.value == 0 || Period.value == 1 || Period.value == 2" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray"> {{backupAndRestore['hour']}}</label>
+                                <div class="input-group bootstrap-timepicker" ng-show="Period.value == 0 || Period.value == 1 || Period.value == 2">
+                                    <input id="timepicker1" type="text" class="form-control input-small" ng-model="Time">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                                </div><br/>
+                                <button ng-show="showAddButton" type="button" class="btn btn-success" id="save_facility" ng-click="startScheduleBackup(databaseName, Period.value, Day.value, Time, userName, password)">
+                                    <i class="glyphicon glyphicon-plus-sign"></i> {{backupAndRestore['add']}}
+                                </button>
+                                <button ng-show="showUpdateButton" type="button" class="btn btn-success" id="save_facility" ng-click="updateScheduledBackup(databaseName, Period.value, Day.value, Time, userName, password)">
+                                    <i class="glyphicon glyphicon-floppy-disk"></i> {{backupAndRestore['update']}}
+                                </button>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="edit-user-panel col-md-6 col-md-offset-1" ng-show="display=='schedule'">
+                    <table>
+                        <thead>
+                            <tr style="color: #31708f; background-color : #d9edf7; border-color: #bce8f1" >
+                                <th colspan="3"> {{backupAndRestore['listOfScheduledTasks']}}</th>
+                            </tr>
+                        </thead>
+                       <tr ng-repeat="list in ListofTasks">
+                           <td ng-model="taskDelete">{{list[1]}}</td>
+                           <td>
+                               <button class="btn btn-default btn-edit-user"  ng-click="editTask(list[0])">
+                                   <i class="glyphicon glyphicon-edit"></i> {{backupAndRestore['edit']}}
+                               </button>
+                           </td>
+                           <td>
+                               <button type="button" class="btn btn-danger" id="save_facility" ng-click="deleteScheduledBackup(list[1])">
+                                   <i class="glyphicon glyphicon-remove"></i> {{backupAndRestore['delete']}}
+                               </button>
+                           </td>
+
+                       </tr>
+                    </table>
+                </div>
+
+                </div>
+            </div>
+        </div>
+    <script type="text/javascript">
+            $('#timepicker1').timepicker();
+    </script>
+</body>

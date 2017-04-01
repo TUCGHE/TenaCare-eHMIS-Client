@@ -1,0 +1,312 @@
+﻿<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+</head>
+<body>
+<div >
+<div >
+    {{title}}<br />
+    {{status}}
+        <div class="panel panel-default  pnlHeader" ng-init="init()">
+            <div class="panel-body">
+               
+                <div class="row">
+                    <div class="col-sm-4">
+
+                        {{dataEntry['year']}}:&nbsp <input type="number" id="sltyear" ng-model="selectedYear" ng-change="loadData(temphierarchy[0].HMISCode)" style="width:90px" max="2020" min="2001" /><br /><br />
+                        {{dataEntry['month']}}:<select class="dropdown" ng-model="selectedMonth" ng-change="loadData(temphierarchy[0].HMISCode)" id="Month">
+                            <option>{{dataEntry['meskerem']}}</option>
+                            <option>{{dataEntry['tikimt']}}</option>
+                            <option>{{dataEntry['hidar']}}</option>
+                            <option>{{dataEntry['tahisas']}}</option>
+                            <option>{{dataEntry['tir']}}</option>
+                            <option>{{dataEntry['yekatit']}}</option>
+                            <option>{{dataEntry['megabit']}}</option>
+                            <option>{{dataEntry['miyazia']}}</option>
+                            <option>{{dataEntry['ginbot']}}</option>
+                            <option>{{dataEntry['sene']}}</option>
+                            <option>{{dataEntry['hamle']}}</option>
+                            <option>{{dataEntry['nehase']}}</option>
+                        </select>
+
+                    </div>
+                    <div class="col-sm-6">
+
+                    </div>
+                    <div class="col-sm-2">
+
+                        <input class="btn-primary" type="submit" value={{dataEntry['edit']}} style="width:100px" /><br />
+                        <input class="btn-primary" type="submit" value={{dataEntry['save']}} ng-click="saveClicked()" style="width:100px" />
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="panel panel-info">
+         <div class="panel-body"> -->
+        <div class="row">
+            <div class="col-sm-12">
+                <table class="table table-bordered table-condensed table-hover" style="background-color:white">
+                    <thead>
+                        <tr>
+                            <th colspan="14" style="background-color:lightgray; font-size: 16px">{{dataEntry['ipdDiseaseDataEntry']}}</th>
+                        </tr>
+                        <tr>
+                            <th rowspan="2"></th>
+                            <th rowspan="2"></th>
+                            <th colspan="6" class="text-center">{{dataEntry['morbidityInIpd']}}</th>
+                            <th colspan="6" class="text-center">{{dataEntry['mortalityInIpd']}}</th>
+                        </tr>
+                        <tr>
+
+                            <th colspan="3" class="text-center">{{dataEntry['male']}}</th>
+                            <th colspan="3" class="text-center">{{dataEntry['female']}}</th>
+                            <th colspan="3" class="text-center">{{dataEntry['male']}}</th>
+                            <th colspan="3" class="text-center">{{dataEntry['female']}}</th>
+                        </tr>
+                    </thead>
+
+                    <tr>
+                        <td> {{dataEntry['icd10']}} </td>
+                        <td> {{dataEntry['disease']}} </td>
+                        <td> 0-4 {{dataEntry['years']}} </td>
+                        <td> 5-14 {{dataEntry['years']}} </td>
+                        <td> >15 {{dataEntry['years']}} </td>
+                        <td> 0-4 {{dataEntry['years']}} </td>
+                        <td> 5-14 {{dataEntry['years']}} </td>
+                        <td> >15 {{dataEntry['years']}} </td>
+                        <td> 0-4 {{dataEntry['years']}} </td>
+                        <td> 5-14 {{dataEntry['years']}} </td>
+                        <td> >15 {{dataEntry['years']}} </td>
+                        <td> 0-4 {{dataEntry['years']}} </td>
+                        <td> 5-14 {{dataEntry['years']}} </td>
+                        <td> >15 {{dataEntry['years']}} </td>
+                    </tr>
+
+                    <tbody>
+                        <tr ng-repeat="x in ipdDictionarydata">
+                            <td class="tableFormat" ng-if="x.Format===1">
+                                {{ x.SNO }}
+                            </td>
+                            <td class="table0" ng-if="x.Format != 1">
+                                {{ x.SNO }}
+                            </td>
+                            <!-- Disease -->
+                            <td class="tableFormat" ng-if="x.Format === 1">
+                                {{ x.Disease }}
+                            </td>
+                            <td class="table1" ng-if="x.Format != 1">
+                                {{ x.Disease }}
+                            </td>
+                            <!-- M04 -->
+                            <td class="tableFormat" ng-if="x.Format === 1">
+                                <!--{{ x.M04 }}-->
+                            </td>
+                            <td class="td" ng-if="x.Format != 1">
+                                <!--{{ x.M04 }}
+                                <input type="text" name="m04" class="input1" value="{{ labelidvalues[x.M04+'M'] }}" />-->
+                                <span class="label label-warning" id="{{x.M04}}_labelWarning"></span>
+                                <span class="label label-danger" id="{{x.M04}}_labelError"></span>
+                                <input ng-blur="getChangedValue(selectedYear,selectedMonth,M04Val,x.M04,temphierarchy[0].HMISCode,temphierarchy[0].FacilityTypeId,temphierarchy[0].ZoneId,temphierarchy[0].RegionId,temphierarchy[0].DistrictId,2)" 
+                                       ng-model="M04Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" id="{{x.M04}}" 
+                                       value="{{loadedData[getMIPDIndex(loadedData,x.M04,'LabelID',2)].Value}}" />
+
+                            </td>
+                            <!-- M514 -->
+                            <td class="tableFormat" ng-if="x.Format === 1">
+                                <!--{{ x.M514 }}-->
+                            </td>
+                            <td class="table3" ng-if="x.Format != 1">
+                                <!--{{ x.M514 }}
+                                <input type="text" name="m04" class="input1" value="{{ labelidvalues[x.M514+'M'] }}" />-->
+                                <span class="label label-warning" id="{{x.M514}}_labelWarning"></span>
+                                <span class="label label-danger" id="{{x.M514}}_labelError"></span>
+                                <input ng-blur="getChangedValue(selectedYear,selectedMonth,M514Val,x.M514,temphierarchy[0].HMISCode,temphierarchy[0].FacilityTypeId,temphierarchy[0].ZoneId,hierarchy[0].RegionId,temphierarchy[0].DistrictId,2)" 
+                                       ng-model="M514Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" 
+                                       value="{{loadedData[getMIPDIndex(loadedData,x.M514,'LabelID',2)].Value}}" id="{{x.M514}}">
+
+                            </td>
+                            <!-- M15 -->
+                            <td class="tableFormat" ng-if="x.Format === 1">
+                                <!--{{ x.M15 }}-->
+                            </td>
+                            <td class="table3" ng-if="x.Format != 1">
+                                <!--{{ x.M15 }}
+                                <input type="text" name="m04" class="input1" value="{{ labelidvalues[x.M15+'M'] }}" />-->
+                                <span class="label label-warning" id="{{x.M15}}_labelWarning"></span>
+                                <span class="label label-danger" id="{{x.M15}}_labelError"></span>
+                                <input ng-blur="getChangedValue(selectedYear,selectedMonth,M15Val,x.M15,temphierarchy[0].HMISCode,temphierarchy[0].FacilityTypeId,temphierarchy[0].ZoneId,temphierarchy[0].RegionId,temphierarchy[0].DistrictId,2)" 
+                                       ng-model="M15Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" 
+                                       value="{{loadedData[getMIPDIndex(loadedData,x.M15,'LabelID',2)].Value}}" id="{{x.M15}}">
+
+                            </td>
+                            <!-- F04-->
+                            <td class="tableFormat" ng-if="x.Format === 1">
+                                <!--{{ x.F04 }}-->
+                            </td>
+                            <td class="female" ng-if="x.Format != 1">
+                                <!--{{ x.F04 }}
+                                <input type="text" name="m04" class="input2" value="{{ labelidvalues[x.F04+'M'] }}" />-->
+                                <span class="label label-warning" id="{{x.F04}}_labelWarning"></span>
+                                <span class="label label-danger" id="{{x.F04}}_labelError"></span>
+                                <input ng-blur="getChangedValue(selectedYear,selectedMonth,F04Val,x.F04,temphierarchy[0].HMISCode,temphierarchy[0].FacilityTypeId,temphierarchy[0].ZoneId,temphierarchy[0].RegionId,temphierarchy[0].DistrictId,2)" 
+                                       ng-model="F04Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" 
+                                       value="{{loadedData[getMIPDIndex(loadedData,x.F04,'LabelID',2)].Value}}" id="{{x.F04}}">
+
+                            </td>
+                            <!-- F514 -->
+                            <td class="tableFormat" ng-if="x.Format === 1">
+                                <!--{{ x.F514 }}-->
+                            </td>
+                            <td class="female" ng-if="x.Format != 1">
+                                <!--{{ x.F514 }}
+                                <input type="text" name="m04" class="input2" value="{{ labelidvalues[x.F514+'M'] }}" />-->
+                                <span class="label label-warning" id="{{x.F514}}_labelWarning"></span>
+                                <span class="label label-danger" id="{{x.F514}}_labelError"></span>
+                                <input ng-blur="getChangedValue(selectedYear,selectedMonth,F514Val,x.F514,temphierarchy[0].HMISCode,temphierarchy[0].FacilityTypeId,temphierarchy[0].ZoneId,temphierarchy[0].RegionId,temphierarchy[0].DistrictId,2)" 
+                                       ng-model="F514Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" 
+                                       value="{{loadedData[getMIPDIndex(loadedData,x.F514,'LabelID',2)].Value}}" id="{{x.F514}}">
+
+                            </td>
+                            <!-- F15 -->
+                            <td class="tableFormat" ng-if="x.Format === 1">
+                                <!--{{ x.F15 }}-->
+                            </td>
+                            <td class="female" ng-if="x.Format != 1">
+                                <!--{{ x.F15 }}
+                                <input type="text" name="m04" class="input2" value="{{ labelidvalues[x.F15+'M'] }}" />-->
+                                <span class="label label-warning" id="{{x.F15}}_labelWarning"></span>
+                                <span class="label label-danger" id="{{x.F15}}_labelError"></span>
+                                <input ng-blur="getChangedValue(selectedYear,selectedMonth,F15Val,x.F15,temphierarchy[0].HMISCode,temphierarchy[0].FacilityTypeId,temphierarchy[0].ZoneId,temphierarchy[0].RegionId,temphierarchy[0].DistrictId,2)" 
+                                       ng-model="F15Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" 
+                                       value="{{loadedData[getMIPDIndex(loadedData,x.F15,'LabelID',2)].Value}}" id="{{x.F15}}">
+
+                            </td>
+
+                            <!-- MM04 -->
+                            <td class="tableFormat" ng-if="x.Format === 1">
+                                <!--{{ x.MM04 }}-->
+                            </td>
+                            <td class="table2" ng-if="x.Format != 1">
+                                <!--{{ x.MM04 }}
+                                <input type="text" name="m04" class="input1" value="{{ labelidvalues[x.MM04+'MM'] }}" />-->
+                                <span class="label label-warning" id="{{x.MM04}}_labelWarning"></span>
+                                <span class="label label-danger" id="{{x.MM04}}_labelError"></span>
+                                <input ng-blur="getChangedValue(selectedYear,selectedMonth,MM04Val,x.MM04,temphierarchy[0].HMISCode,temphierarchy[0].FacilityTypeId,temphierarchy[0].ZoneId,temphierarchy[0].RegionId,temphierarchy[0].DistrictId,3)"
+                                        ng-model="MM04Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" id="{{x.MM04}}" 
+                                       value="{{loadedData[getMIPDIndex(loadedData,x.MM04,'LabelID',3)].Value}}" />
+
+                            </td>
+
+                            <!-- MM514 -->
+                            <td class="tableFormat" ng-if="x.Format === 1">
+                                <!--{{ x.MM514 }}-->
+                            </td>
+                            <td class="table3" ng-if="x.Format != 1">
+                                <!--{{ x.MM514 }}
+                                <input type="text" name="m04" class="input1" value="{{ labelidvalues[x.MM514+'MM'] }}" />-->
+                                <span class="label label-warning" id="{{x.MM514}}_labelWarning"></span>
+                                <span class="label label-danger" id="{{x.MM514}}_labelError"></span>
+                                <input ng-blur="getChangedValue(selectedYear,selectedMonth,MM514Val,x.MM514,temphierarchy[0].HMISCode,temphierarchy[0].FacilityTypeId,temphierarchy[0].ZoneId,temphierarchy[0].RegionId,temphierarchy[0].DistrictId,3)" 
+                                       ng-model="MM514Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" id="{{x.MM514}}"
+                                        value="{{loadedData[getMIPDIndex(loadedData,x.MM514,'LabelID',3)].Value}}" />
+
+                            </td>
+                            <!-- MM15 -->
+                            <td class="tableFormat" ng-if="x.Format === 1">
+                                <!--{{ x.MM15 }}-->
+                            </td>
+                            <td class="table3" ng-if="x.Format != 1">
+                                <!--{{ x.MM15 }}
+                                <input type="text" name="m04" class="input1" value="{{ labelidvalues[x.MM15+'MM'] }}" />-->
+                                <span class="label label-warning" id="{{x.MM15}}_labelWarning"></span>
+                                <span class="label label-danger" id="{{x.MM15}}_labelError"></span>
+                                <input ng-blur="getChangedValue(selectedYear,selectedMonth,MM15Val,x.MM15,temphierarchy[0].HMISCode,temphierarchy[0].FacilityTypeId,temphierarchy[0].ZoneId,temphierarchy[0].RegionId,temphierarchy[0].DistrictId,3)" 
+                                       ng-model="MM15Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" id="{{x.MM15}}" 
+                                       value="{{loadedData[getMIPDIndex(loadedData,x.MM15,'LabelID',3)].Value}}" />
+
+                            </td>
+
+                            <!-- MF04 -->
+                            <td class="tableFormat" ng-if="x.Format === 1">
+                                <!--{{ x.MF04 }}-->
+                            </td>
+                            <td class="female" ng-if="x.Format != 1">
+                                <!--{{ x.MF04 }}
+                                <input type="text" name="m04" class="input2" value="{{ labelidvalues[x.MF04+'MM'] }}" />-->
+                                <span class="label label-warning" id="{{x.MF04}}_labelWarning"></span>
+                                <span class="label label-danger" id="{{x.MF04}}_labelError"></span>
+                                <input ng-blur="getChangedValue(selectedYear,selectedMonth,MF04Val,x.MF04,temphierarchy[0].HMISCode,temphierarchy[0].FacilityTypeId,temphierarchy[0].ZoneId,temphierarchy[0].RegionId,temphierarchy[0].DistrictId,3)" 
+                                       ng-model="MF04Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" id="{{x.MF04}}" 
+                                       value="{{loadedData[getMIPDIndex(loadedData,x.MF04,'LabelID',3)].Value}}" />
+
+                            </td>
+
+                            <!-- MF514 -->
+                            <td class="tableFormat" ng-if="x.Format === 1">
+                                <!--{{ x.MF514 }}-->
+                            </td>
+                            <td class="female" ng-if="x.Format != 1">
+                                <!--{{ x.MF514 }}
+                                <input type="text" name="m04" class="input2" value="{{ labelidvalues[x.MF514+'MM'] }}" />-->
+                                <span class="label label-warning" id="{{x.MF514}}_labelWarning"></span>
+                                <span class="label label-danger" id="{{x.MF514}}_labelError"></span>
+                                <input ng-blur="getChangedValue(selectedYear,selectedMonth,MF514Val,x.MF514,temphierarchy[0].HMISCode,temphierarchy[0].FacilityTypeId,temphierarchy[0].ZoneId,temphierarchy[0].RegionId,temphierarchy[0].DistrictId,3)" 
+                                       ng-model="MF514Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" id="{{x.MF514}}" value="{{loadedData[getMIPDIndex(loadedData,x.MF514,'LabelID',3)].Value}}" />
+
+                            </td>
+                            <!-- MF15 -->
+                            <td class="tableFormat" ng-if="x.Format === 1">
+                                <!--{{ x.MF15 }}-->
+                            </td>
+                            <td class="female" ng-if="x.Format != 1">
+                                <!--{{ x.MF15 }}
+                                <input type="text" name="m04" class="input2" value="{{ labelidvalues[x.MF15+'MM'] }}" />-->
+                                <span class="label label-warning" id="{{x.MF15}}_labelWarning"></span>
+                                <span class="label label-danger" id="{{x.MF15}}_labelError"></span>
+                                <input ng-blur="getChangedValue(selectedYear,selectedMonth,MF15Val,x.MF15,temphierarchy[0].HMISCode,temphierarchy[0].FacilityTypeId,temphierarchy[0].ZoneId,temphierarchy[0].RegionId,temphierarchy[0].DistrictId,3)" 
+                                       ng-model="MF15Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" id="{{x.MF15}}" 
+                                       value="{{loadedData[getMIPDIndex(loadedData,x.MF15,'LabelID',3)].Value}}" />
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+                <!-- </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

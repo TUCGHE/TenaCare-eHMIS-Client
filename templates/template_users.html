@@ -1,0 +1,155 @@
+﻿<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<div ng-controller="UserCtrl">
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h2 class="panel-title">{{userPage['userAdministration']}}</h2>
+        </div>
+        <div class="panel-body" style="max-height:790px;overflow-y: auto;overflow-x: hidden;">
+            <div class="row">
+
+                <div class="edit-user-panel col-md-5 col-md-offset-1">
+                    <div id="users">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>{{userPage['userId']}}</th>
+                                    <th>{{userPage['fullName']}}</th>
+                                    <th>{{userPage['status']}}</th>
+                                    <!--<th>{{userPage['edit']}}</th>-->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="user in users">
+                                    <th>{{ user._userid  }}</th>
+                                    <td>{{ user._fullName  }}</td>
+                                    <td>
+                                        <span ng-show="user._isactive" class="text-success">
+                                            <i class="glyphicon glyphicon-ok"></i> {{userPage['active']}}
+                                        </span>
+                                        <span ng-show="!user._isactive" class="text-muted">
+                                            <i class="glyphicon glyphicon-ban-circle"></i> {{userPage['inActive']}}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-default btn-edit-user" data-user-id="{{ user._userid }}" ng-click="toggleEditUser(user)">
+                                            <i class="glyphicon glyphicon-edit"></i> {{userPage['edit']}}
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="edit-user-panel col-md-5">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            {{ edit_action.title }}
+                        </div>
+                        <div class="panel-body">
+
+                                <div class="edit-user-panel-controls">
+                                    <div class="form-group">
+                                        <label for="user_userid">{{userPage['userLoginId']}}</label>
+                                        <input type="text" class="form-control" id="user_loginid" placeholder="User Id" ng-model="edit_action.user._userid" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user_fullname">{{userPage['fullName']}}</label>
+                                        <input type="text" class="form-control" id="user_fullname" placeholder="Full name" ng-model="edit_action.user._fullName" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user_password">{{userPage['password']}}</label>
+                                        <input type="password" class="form-control" id="user_password" placeholder="Password" ng-model="edit_action.user._password" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="user_password_confirm">{{userPage['confirmPassword']}}</label>
+                                        <input type="password" class="form-control" id="user_password_confirm" placeholder="Confirm Password" ng-model="edit_action.user._password_confirm" />
+                                    </div>
+                                </div>
+
+                                <div ng-show="edit_action.mode=='edit'" class="col-md-7">
+                                    <div class="panel-body">
+                                        <div class="list-group">
+                                            <div class="list-group-item">
+                                                <b>{{userPage['manageRoles']}}</b>
+                                                </div>
+                                                <div class="list-group-item" ng-repeat="role in edit_action.user_roles">
+                                                    <span ng-show="role._isactive" class="text-success">
+                                                        <b>{{ allUserRoles[role._roleid]._roledescription }}</b>
+                                                        <button class="btn btn-warning" title="Click to Deactivate this Role" ng-click="role._isactive=false"><i class="glyphicon glyphicon-ban-circle"></i></button>
+                                                    </span>
+                                                    <span ng-show="!role._isactive" class="text-muted">
+                                                        {{ allUserRoles[role._roleid]._roledescription }}
+                                                        <button class="btn btn-default" title="Click to Activate this Role" ng-click="role._isactive=true"><i class="glyphicon glyphicon-ok-circle"></i></button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+
+                        </div>
+                        <div class="panel-footer">
+                            <button ng-show="edit_action.mode=='add'" type="button" class="btn btn-success" id="save_user" ng-click="createNewUser()">
+                            <i class="glyphicon glyphicon-plus-sign"></i> {{userPage['addUser']}}</button>
+
+                            <div class="btn-group btn-group-sm">
+
+                                <button ng-show="edit_action.mode=='edit'" type="button" class="btn btn-success" id="btn_save_user" ng-click="updateUser()">
+                                    <i class="glyphicon  glyphicon-floppy-disk"></i> {{userPage['update']}}
+                                </button>
+                                <button ng-show="edit_action.mode=='edit' && edit_action.user._isactive" type="button" class="btn btn-warning" id="btn_deactivate_user" ng-click="edit_action.user._isactive=false">
+                                    <i class="glyphicon glyphicon-ban-circle"></i> {{userPage['deactive']}}
+                                </button>
+                                <button ng-show="edit_action.mode=='edit' && !edit_action.user._isactive" type="button" class="btn btn-default" id="btn_activate_user" ng-click="edit_action.user._isactive=true">
+                                    <i class="glyphicon glyphicon-ok-circle"></i> {{userPage['activate']}}
+                                </button>
+                                <button ng-show="edit_action.mode=='edit'" type="button" class="btn btn-danger" id="btn_delete_user" ng-click="deleteUser()">
+                                    <i class="glyphicon glyphicon-remove"></i> {{userPage['delete']}}
+                                </button>
+
+                            </div>
+
+                            <button ng-show="edit_action.mode=='edit'" type="button" class="btn btn-info btn-sm" id="btn_toggle_new_user" ng-click="toggleNewUser()">
+                                <i class="glyphicon glyphicon-refresh"></i> {{userPage['newUser']}}
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- 
+        <div class="panel-footer">
+            <div class="alert alert-{{ status_class }}">
+                {{ status }}
+            </div>
+        </div>
+            -->
+    </div>
+</div>

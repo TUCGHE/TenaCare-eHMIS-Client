@@ -1,0 +1,126 @@
+﻿<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<style>
+    table, th, td {
+        border: 1px solid grey;
+        border-collapse: collapse;
+        padding: 5px;
+    }
+
+        table tr:nth-child(odd) {
+            background-color: #f1f1f1;
+        }
+
+        table tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+
+    .panel {
+        background-color: lightgray;
+    }
+
+    .pnlHeader {
+        background-color: Lavender;
+    }
+</style>
+ <!--<div ng-init="init()">
+ </div>-->
+ {{title}}<br />
+ {{status}} 
+    
+    <div class="panel panel-info pnlHeader">
+        <div class="panel-body">
+            <label>{{dataEntry['year']}}:</label>
+            <select id="sltyear" ng-model="selectedYear" value="2006" ng-change="onYearSelect()">
+                <option value="2006" selected="selected">2006</option>
+                <option value="2007">2007</option>
+                <option value="2008">2008</option>
+                <option value="2009">2009</option>
+                <option value="2009">2010</option>
+            </select>
+            <label>{{dataEntry['quarter']}}:</label>
+            <select id="quarter" ng-model="selectedQuarter"  value="1" ng-change="onQuarterSelect()">
+                <option selected="selected">1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+            </select>
+            <input id="btnSave" type="button" value={{dataEntry['save']}} ng-click="saveClicked()" />
+        </div>
+    </div>
+    <table>
+        <tr>
+            <th>{{dataEntry['icd10']}}</th>
+            <th>{{dataEntry['disease']}}</th>
+            <th>{{dataEntry['male']}} 0-4</th>
+            <th>{{dataEntry['male']}} 5-14</th>
+            <th>{{dataEntry['male']}} >=15</th>
+            <th>{{dataEntry['female']}} 0-4</th>
+            <th>{{dataEntry['female']}} 5-14</th>
+            <th>{{dataEntry['female']}} >=15</th>
+        </tr>
+        <tr ng-repeat="x in data">
+            <td>{{ x.SNO}}</td>
+            <td>{{ x.Disease}}</td>
+
+            <td ng-style="x.Format && {'background-color':'grey'} || {'background-color': 'white'}">
+                <input ng-blur="getChangedValue(selectedYear,selectedQuarter,M04Val,x.M04)" ng-model="M04Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" id="{{x.M04}}" value="{{loadedData[getQOPDIndex(loadedData,x.M04,'LabelID')].Value}}" />
+            </td>
+            <td ng-style="x.Format && {'background-color':'grey'} || {'background-color': 'white'}">
+            <input ng-blur="getChangedValue(selectedYear,selectedQuarter,M514Val,x.M514)" ng-model="M514Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" value="{{loadedData[getQOPDIndex(loadedData,x.M514,'LabelID')].Value}}" id="{{x.M514}}">
+            </td>
+            <td ng-style="x.Format && {'background-color':'grey'} || {'background-color': 'white'}">
+            <input ng-blur="getChangedValue(selectedYear,selectedQuarter,M15Val,x.M15)" ng-model="M15Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" value="{{loadedData[getQOPDIndex(loadedData,x.M15,'LabelID')].Value}}" id="{{x.M15}}">
+            </td>
+            <td ng-style="x.Format && {'background-color':'grey'} || {'background-color': 'white'}">
+            <input ng-blur="getChangedValue(selectedYear,selectedQuarter,F04Val,x.F04)" ng-model="F04Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" value="{{loadedData[getQOPDIndex(loadedData,x.F04,'LabelID')].Value}}" id="{{x.F04}}">
+            </td>
+            <td ng-style="x.Format && {'background-color':'grey'} || {'background-color': 'white'}">
+            <input ng-blur="getChangedValue(selectedYear,selectedQuarter,F514Val,x.F514)" ng-model="F514Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" value="{{loadedData[getQOPDIndex(loadedData,x.F514,'LabelID')].Value}}" id="{{x.F514}}">
+            </td>
+            <td ng-style="x.Format && {'background-color':'grey'} || {'background-color': 'white'}">
+            <input ng-blur="getChangedValue(selectedYear,selectedQuarter,F15Val,x.F15)" ng-model="F15Val" ng-show="x.Format!=1" min="0" class="form-control" type="number" value="{{loadedData[getQOPDIndex(loadedData,x.F15,'LabelID')].Value}}" id="{{x.F15}}">
+            </td>
+        </tr>
+    </table>
+    <!--sltyear.value + ' ' + quarter.value + ' ' + this.value + ' ' + this.id
+        <td>{{x.M04}}</td>
+    <td>{{x.M514}}</td>
+    <td>{{x.M15}}</td>
+    <td>{{x.F04}}</td>
+    <td>{{x.F514}}</td>
+    <td>{{x.F15}}</td>-->
+    <script>
+    document.getElementById("sltyear").addEventListener("change", function () {
+
+        //var sel = 'element';
+        //var scope = angular.element(sel).scope();
+        //console.log(scope);
+        //document.getElementById(281).value = 12;
+    }
+    );
+    </script>

@@ -1,0 +1,179 @@
+﻿<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Web-Based eHMIS</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">  
+   <link rel="stylesheet" href="js/libs/bootstrap/dist/css/bootstrap.min.css">
+
+   
+    <!-- 3rd-Party SCRIPTS -->
+    <script src="js/vendor/js.cookie.js"></script>
+    <script src="js/libs/jquery/dist/jquery.min.js"></script>
+    <script src="js/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="js/libs/angular/angular.min.js"></script>
+    <script src="js/libs/angular-ui-grid/ui-grid.min.js"></script>
+    <script src="js/libs/angular-route/angular-route.min.js"></script>
+    <script src="js/libs/bootstrap-switch/dist/js/bootstrap-switch.min.js"></script>
+    <script src="js/libs/dirPagination/dirPagination.js"></script>
+
+    <!-- NVD3 Libraries...-->
+    <script src="js/libs/nvd3/angular-nvd3.js"></script>
+    <script src="js/libs/nvd3/d3.min.js"></script>
+    <script src="js/libs/nvd3/nv.d3.min.js"></script>
+    <!-- NVD3 Libraries...-->
+    
+    <script src="js/modal_alert.js"></script>
+
+    <script src="js/libs/angular-leaflet-directive/angular-leaflet-directive.js"></script>
+    <script src="js/libs/leaflet/leaflet.js"></script>
+   <!-- <script src="js/libs/dashboard/malhar-angular-dashboard.js"></script>-->
+   
+
+    <script src="js/mainApp.js"></script>
+    <script src="js/controllers/controller_authentication.js"></script>
+    <script src="js/services/service_Language.js"></script>
+    <script src="js/services/service_HostConfig.js"></script>
+
+    <script src="js/services/service_authentication.js"></script>
+    <script src="js/libs/angular-loading-bar/build/loading-bar.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/eHMISMain.css">
+</head>
+<body>
+<div class="container" ng-app="eHMISApp" ng-controller="AuthenticationCtrl" id="grad1" ng-cloak>
+<div class="panel panel-info">
+<div class="panel-body">				
+			
+		<div class="panel panel-info panelTopDashBoard" ng-show="true">
+		<div class="panel-body">
+			<div class="row">
+						
+				<div class="col-sm-12" >									  				 
+					<img src="img/eHMISLogin.jpg" class="img-responsive"> 				  
+				</div>
+																								
+			</div>
+	   </div>
+	   </div>
+	   
+			   <div class="row">	
+					<div class="col-sm-12" style="background-color:LightSteelBlue;">	
+						<button type="button" class="btn btn-info btn-block">
+                        {{userPage['welcomeToEhmisPleaseLoginToAccessTheSystem']}}</button>
+					</div>
+			   </div>
+	   
+	   <div class="panel panel-info panelTopDashBoard" ng-show="true">
+		<div class="panel-body">
+			<div class="row">
+						
+				<div class="col-sm-3" >									  				 
+					<img src="img/login.jpg" class="img-responsive"> 
+				</div>
+				<div class="col-sm-6 loginPage" >									  				 
+					<form class="form-horizontal" role="form">
+						<div class="form-group">
+						  <label class="control-label col-sm-2" for="username">{{userPage['loginId']}}:</label>
+						  <div class="col-sm-10">
+							<input type="text" class="form-control" id="username" placeholder="Login ID">
+						  </div>
+						</div>
+						<div class="form-group">
+						  <label class="control-label col-sm-2" for="password">{{userPage['password']}}:</label>
+						  <div class="col-sm-10">
+							<input type="password" class="form-control" id="password" placeholder="Enter Password">
+						  </div>
+						</div>
+						<div class="form-group">
+						  <div class="col-sm-offset-2 col-sm-10">
+							<div class="checkbox">
+							  <label><input id="cbxRememberMe" type="checkbox">{{userPage['rememberMe']}}</label>
+							</div>
+						  </div>
+						</div>
+						<div class="form-group">
+						  <div class="col-sm-offset-2 col-sm-10">
+							<button type="button" ng-click="login()" id="btnLogin" class="btn btn-default">{{userPage['login']}}</button>
+							 <!-- a href="mainPage.html" class="btn btn-primary">submit</!--a -->
+						  </div>
+						</div>
+					</form>
+				</div>
+				<div class="col-sm-3" >									  				 
+					
+				</div>
+																								
+			</div>
+	   </div>
+	   </div>
+	   	 
+
+		<div class="panel panel-info panelTopDashBoard" ng-show="true">
+		<div class="panel-body">				
+			
+			<div class="row">						
+				<div class="col-sm-12" >									  				 
+					<img src="img/footer.jpg" class="img-responsive"> 				  
+				</div>																								
+			</div>
+	   </div>
+	   </div>
+	
+ </div>
+ </div>
+ </div>
+
+
+    <div id="modalTemplate">
+        <!-- Modal -->
+        <div class="modal fade" id="{id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="vertical-alignment-helper">
+                <div class="modal-dialog vertical-align-center">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span><span class="sr-only">OK</span>
+
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">{title}</h4>
+
+                        </div>
+                        <div class="modal-body">{message}</div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalContainer"></div>
+
+</body>
+</html>

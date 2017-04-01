@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+
+<body>
+
+<!-- Write your comments here -->
+ <div ng-app="eHMISApp" ng-controller="analyticsCtrl">
+     <div class="container-fluid">
+         <div class="row">
+             <div class="col-sm-12 topSetLocationSiteSetting">
+                 <h3 style="text-align: center"><b>Welcome to Tena Analytics</b> </h3>
+             </div>
+         </div>
+         <div class="row row-eq-height">
+             <div class="col-sm-5 topTypeSelection">
+                 <form>
+                     Parameter Selection:
+                     <input type="radio" ng-model="configType" value="ReportType">Report Type
+                     <input type="radio" ng-model="configType" value="Institutions">Institutions
+                     <input type="radio" ng-model="configType" value="Period">Period
+                 </form>
+             </div>
+             <div class="col-sm-2 topTypeSelection">
+                 <button type="button" class="btn btn-primary btn-setLocation" ng-click="showReports()">
+                     show report
+                 </button>
+             </div>
+             <div class="col-sm-3 topTypeSelection">
+                 <form>
+                     Select how to show the table:
+                     <input type="radio" ng-model="pivotType" value="row">Show in Rows
+                     <input type="radio" ng-model="pivotType" value="column">Show in Columns
+                 </form>
+             </div>
+             <div class="col-sm-2 topTypeSelection">
+                 <form>
+                     <input type="radio" ng-model="interfaceVisibility" 
+                            value="showReports">Show Report
+                     <input type="radio" ng-model="interfaceVisibility" 
+                            value="showParameters">Show Parameters
+                     <input type="radio" ng-model="interfaceVisibility"
+                            value="showCharts">Show Charts
+                 </form>
+             </div>
+         </div>
+
+         <div ng-switch="interfaceVisibility">
+             <div ng-switch-when="showParameters">
+                 <div class="row row-eq-height">
+                     <div class="col-sm-3 topTypeSelectionLeft">
+                         <div ng-switch="configType">
+                             <div ng-switch-when="ReportType">
+                                 <h4>
+                                     ReportType &nbsp;&nbsp;
+                                     <button type="button" class="btn btn-primary btn-setLocation" ng-click="clearCategory()">
+                                         Clear All Selection
+                                     </button>
+                                 </h4>
+
+
+                                 <ul style="list-style-type:none">
+                                     <li>
+                                         <span ng-show="true">
+                                             <img ng-click="getCategory(1, 1, 'service')"
+                                                  src="img/plus.png" width="20" height="20"
+                                                  ng-show="(serviceClicked != true)">
+                                             <img ng-click="getCategory(1, 1, 'service')"
+                                                  src="img/minus.png" width="20" height="20"
+                                                  ng-show="(serviceClicked == true)">
+                                         </span>
+                                         <input type="checkbox" ng-model="checkedState['service']" class="chkboxAnalytics"
+                                                ng-checked="checkedState['service']"
+                                                ng-change="checkedStateChanged('service', null, checkedState['service'], category1['service'],0)">
+                                         <span ng-click="getCategory(1, 1, 'service')">
+                                             <b class="Analytics">Service</b>
+                                         </span>
+                                         <div ng-show="serviceClicked">
+                                             <ul class="customReport">
+                                                 <li ng-repeat="level1 in category1['service']">
+                                                     <span ng-show="true">
+                                                         <img ng-click="getCategory(1, 2, level1.category1)"
+                                                              src="img/plus.png" width="20" height="20"
+                                                              ng-show="(level1ExpandChildren[level1.category1] != true)">
+                                                         <img ng-click="getCategory(1, 2, level1.category1)"
+                                                              src="img/minus.png" width="20" height="20"
+                                                              ng-show="(level1ExpandChildren[level1.category1] == true)">
+                                                     </span>
+                                                     <input type="checkbox" class="chkboxAnalytics"
+                                                            ng-model="checkedState[level1.category1]"
+                                                            ng-checked="checkedState[level1.category1]"
+                                                            ng-change="checkedStateChanged(level1.category1, 'service', checkedState[level1.category1], category2[level1.category1],1)">
+                                                     <span ng-click="getCategory(1, 2, level1.category1)">
+                                                         <b class="Analytics"> {{ level1.category1 }} </b>
+                                                     </span> <!-- The Region got Clicked..level 0 -->
+                                                     <div ng-show="level1ExpandChildren[level1.category1]">
+                                                         <ul class="customReport">
+                                                             <li ng-repeat="level2 in category2[level1.category1]">
+                                                                 <input type="checkbox" class="chkboxAnalytics"
+                                                                        ng-model="checkedState[level2.category2]"
+                                                                        ng-checked="checkedState[level2.category2]"
+                                                                        ng-change="checkedStateChanged(level2.category2, level1.category1, checkedState[level2.category2], undefined,2)">
+                                                                 <span ng-click="getCategory(1, 3, level2.category2)">
+                                                                     <b class="Analytics"> {{ level2.category2 }}  </b>
+                                                                 </span>
+                                                             </li>
+                                                         </ul>
+                                                     </div>
+                                                 </li>
+                                             </ul>
+                                         </div>
+                                     </li>
+                                 </ul>
+                             </div>
+                             <div ng-switch-when="Institutions">
+                                 <h1>Institutions</h1>
+                                 <p>Learn from Institutions.</p>
+                             </div>
+                             <div ng-switch-when="Period">
+                                 <h1>Period</h1>
+                                 <p>Read about Period.</p>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-sm-9 topTypeSelectionLeft">
+
+                         <table width:"100%"
+                                style="padding:0px" class="table table-hover table-responsive">
+                             <thead class="thead-default">
+                                 <tr>
+                                     <th>
+                                         <h6 class="Analytics" style="text-align:center">Selected Data Elements</h6>
+                                         <button type="button" class="btn btn-primary btn-setLocation" ng-click="clearDataElements()">
+                                             Clear All Selection &nbsp;&nbsp;
+                                         </button>
+                                         <label>
+                                             Search:
+                                             <input ng-model="searchText"
+                                                    ng-model-options="{debounce: 500}"
+                                                    ng-minlength="3">
+                                         </label>
+                                     </th>
+                                 </tr>
+                             </thead>
+                         </table>
+
+                         <table width:"100%"
+                                style="padding:0px" class="table table-hover table-responsive">
+                             <tbody>
+                                 <tr ng-repeat="dataElement in dataElementsArray  | filter:searchText">
+                                     <td>
+                                         <input type="checkbox" class="chkboxAnalytics"
+                                                ng-model="dataElement.Checked"
+                                                ng-checked="dataElement.Checked" />
+                                         <b class="Analytics">{{dataElement.FullDescription}}</b>
+                                     </td>
+                                     <td>
+                                         <b class="Analytics">{{dataElement.Category1}}</b>
+                                     </td>
+                                 </tr>
+                             </tbody>
+                         </table>
+                     </div>
+                 </div>
+             </div>
+             <div ng-switch-when="showReports">
+                 <div class="row row-eq-height">
+                     <div class="col-sm-12 topTypeSelectionLeft">
+                         <table width:"100%" style="padding:0px" class="progress table table-hover table-responsive">
+                             <thead class="thead-default">
+                                 <tr>
+                                     <th>
+                                         <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:100%; height:100px">
+                                             Loading Reports Please Wait.....
+                                         </div>
+                                     </th>
+                                 </tr>
+                             </thead>
+                             <tbody></tbody>
+                         </table>
+                         <table id="reportTable" width:"100%"
+                                style="padding:0px" class="table table-hover table-responsive">
+                             <thead class="thead-default">
+                                 <tr>
+                                     <th>
+                                         <label>Search: <input ng-model="searchTextData"></label>
+                                     </th>
+                                 </tr>
+                                 <tr>
+                                     <th ng-repeat="columnName in customReportColumns" class="info" style="height:50px">
+                                         {{columnName}}
+                                     </th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                                 <tr ng-repeat="row in customReportData | filter:searchTextData" end-of-repeat-directive cache-report-table-data-directive ng-click="showRow(row)">
+                                     <td ng-repeat="columnName in customReportColumns">
+                                         {{row[columnName]}}
+                                     </td>
+                                 </tr>
+                             </tbody>
+                         </table>                         
+                     </div>
+                 </div>
+             </div>
+             <div ng-switch-when="showCharts" render-analytics-directive>
+                 <div class="row row-eq-height">
+                     <div class="col-sm-12 topTypeSelectionLeft">
+                         <div class="analytics-panel" id="analytics-panel"></div>
+                     </div>
+                 </div>
+             </div>
+</div>
+</div>
+</div>
+</body>
+</html>
+
+

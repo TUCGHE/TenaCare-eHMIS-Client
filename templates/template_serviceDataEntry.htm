@@ -1,0 +1,86 @@
+<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<div class="page-title">{{title}}</div>
+{{status}}
+<div ng-if="">
+    <span data-lang="LoadingFiles">{{dataEntry['loadingFiles']}}...</span><br>
+    <img src="img/loading.gif" title="Loading files, please wait...">
+</div>
+<div>
+    <div class="panel panel-default" pnlHeader ng-init="init()">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <label>{{dataEntry['year']}}:</label>
+                    <input type="number" id="sltyear" ng-model="selectedYear" ng-change="loadData(temphierarchy[0].HMISCode)" max="2020" min="2001" />
+                    <label>{{dataEntry['month']}}:</label>
+                    <select class="dropdown" ng-model="selectedMonth" ng-change="loadData(temphierarchy[0].HMISCode)" id="Month">
+                        <option>{{dataEntry['meskerem']}}</option>
+                        <option>{{dataEntry['tikimt']}}</option>
+                        <option>{{dataEntry['hidar']}}</option>
+                        <option>{{dataEntry['tahisas']}}</option>
+                        <option>{{dataEntry['tir']}}</option>
+                        <option>{{dataEntry['yekatit']}}</option>
+                        <option>{{dataEntry['megabit']}}</option>
+                        <option>{{dataEntry['miyazia']}}</option>
+                        <option>{{dataEntry['ginbot']}}</option>
+                        <option>{{dataEntry['sene']}}</option>
+                        <option>{{dataEntry['hamle']}}</option>
+                        <option>{{dataEntry['nehase']}}</option>
+                    </select>
+
+                    <span style="padding-left: 20px;"><input class="btn-primary" type="submit" value={{dataEntry['validateData']}} /></span>
+                    <input class="btn-primary" type="submit" value={{dataEntry['edit']}} />
+                    <span style="padding-left: 10px;"><input class="btn-primary" type="submit" value={{dataEntry['save']}} ng-click="saveClicked()" style="padding-left: 10px;" /></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default pnlServiceEntry">
+        <div class="panel-body">
+            <table width:"100%">
+                <tr ng-repeat="x in data">
+                    <td>{{ x.sno}}</td>
+                    <td>{{ x.activityhc}}</td>
+                    <td ng-style="x.readonly && {'background-color':'lightblue'} || {'background-color': 'white'}">
+                        <span class="label label-warning" id="{{x.labelid}}_labelWarning"></span>
+                        <span class="label label-danger" id="{{x.labelid}}_labelError"></span>
+                        <input ng-blur="getChangedValue(selectedYear,selectedMonth,lid,x.labelid,temphierarchy[0].HMISCode,temphierarchy[0].FacilityTypeId,temphierarchy[0].ZoneId,temphierarchy[0].RegionId,temphierarchy[0].WoredaId)"
+                               ng-model="lid"
+                               ng-show="x.readonly!=1"
+                               min="0"
+                               class="form-control"
+                               type="number"
+                               id="{{x.labelid}}"
+                               value="{{loadedData[getIndex(loadedData,x.labelid,'LabelID')].Value}}" defaultValue="0" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

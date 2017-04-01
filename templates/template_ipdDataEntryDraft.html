@@ -1,0 +1,260 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+</head>
+<body>
+<div ng-app="eHMISApp">
+
+<div ng-controller="ipdDataEntryCtrl">
+   <!-- <div class="panel panel-info">
+    <div class="panel-body">-->
+	<!-- <div class="panel panel-default" style="background-color:lightgreen">
+    <div class="panel-body">
+		<table width:"100%">	
+			 
+			  <tr ng-repeat="x in values">
+			  
+						 <td>{{ x.labelId}}</td> 
+					 
+						 <td>{{ x.dataEleClass}}</td>
+						 <td>{{ x.value}}</td>
+						 <td> {{ labelidvalues[x.labelId+'M'] }} </td> 
+						 <td> {{ labelidvalues[x.labelId+'MM'] }} </td> 
+			  </tr>
+		</table>
+	</div>
+	</div> -->
+	
+          <div class="panel panel-default pnlHeader">
+            <div class="panel-body">
+                <div class ="row">
+                    <div class="col-sm-4">
+                       
+                        Year:&nbsp <input type="number" name="month1" style="width:90px" max="2010" min="2001" value="2008"/><br/><br/>
+                        Month:<select class="dropdown" name="Month">
+                                <option>Meskerem</option>
+                                <option>Tikimit</option>
+                                <option>Hidar</option>
+                                <option>Tahisas</option>
+                                <option>Tir</option>
+                                <option>Yekatit</option>
+                                <option>Megabit</option>
+                                <option>Miyazia</option>
+                                <option>Ginbot</option>
+                                <option>Sene</option>
+                                <option>Hamle</option>
+                                <option>Nehase</option>
+                              </select>
+                      
+                     </div>
+                    <div class="col-sm-6">
+            
+                    </div>
+                    <div class="col-sm-2">
+    
+                        <input class="btn-primary" type="submit" value="Edit" style="width:100px"/><br/>
+                        <input class="btn-primary" type="submit" value="Save" style="width:100px"/>
+                      
+                    </div>
+              </div>
+            </div>
+           </div>
+      
+   <!-- <div class="panel panel-info">
+    <div class="panel-body"> -->
+	 <div class="row"> 
+		<div class="col-sm-12">
+			<table class="table table-bordered table-condensed table-hover" style="background-color:white">
+               <thead>
+                  <tr>
+                      <th colspan="14" style="background-color:lightgray; font-size: 16px">IPD Disease Data Entry</th>
+                   </tr>
+                   <tr>
+                   <th rowspan="2"></th>
+                   <th rowspan="2"></th>
+                   <th colspan ="6" class ="text-center">Morbidity In IPD</th>
+                   <th colspan ="6" class ="text-center">Mortality In IPD</th>
+                       </tr>
+                   <tr>
+                       
+                       <th colspan ="3" class ="text-center">Male</th>
+                       <th colspan ="3" class ="text-center">Female</th>
+                       <th colspan ="3" class ="text-center">Male</th>
+                       <th colspan ="3" class ="text-center">Female</th>
+                   </tr>
+                </thead>
+				
+					<tr>
+						<td>
+							SNO
+						</td>
+						<td>
+							Disease
+						</td>
+						<td>
+							0-4 years
+						</td>
+						<td>
+							5-14 years
+						</td>
+                        <td>
+							>15 years
+						</td>
+                        <td>
+							0-4 years
+						</td>
+                        <td>
+							5-14 years
+						</td>
+                        <td>
+							>15 years
+						</td>
+                        <td>
+							0-4 years
+						</td>
+						<td>
+							5-14 years
+						</td>
+                        <td>
+							>15 years
+						</td>
+                        <td>
+							0-4 years
+						</td>
+                        <td>
+							5-14 years
+						</td>
+                        <td>
+							>15 years
+						</td>
+					</tr>
+			
+				<tbody>
+					<tr ng-repeat="x in ipdDictionarydata">
+						<td class="tableFormat" ng-if="x.Format===1">
+							{{ x.SNO }}
+						</td>
+                        <td class="table0" ng-if="x.Format != 1">
+							{{ x.SNO }}
+						</td>
+                        <!-- Disease -->
+                        <td class="tableFormat" ng-if="x.Format === 1">
+							{{ x.Disease }}
+						</td>
+						<td class="table1" ng-if="x.Format != 1">
+							{{ x.Disease | removeString}}
+						</td>
+                        <!-- M04 -->
+                        <td class ="tableFormat" ng-if="x.Format === 1">
+							<!--{{ x.M04 }}-->
+						</td>
+						<td class ="td" ng-if="x.Format != 1">
+							<!--{{ x.M04 }}-->
+                            <input type="text" name ="m04" class ="input1" value = "{{ labelidvalues[x.M04+'M'] }}"/>
+						</td>
+                        <!-- M514 -->
+                        <td class ="tableFormat" ng-if="x.Format === 1">
+							<!--{{ x.M514 }}-->  
+						</td>
+						<td class ="table3" ng-if="x.Format != 1">
+							<!--{{ x.M514 }}-->
+                            <input type="text" name ="m04" class ="input1" value = "{{ labelidvalues[x.M514+'M'] }}"/>
+						</td>
+                        <!-- M15 -->
+                        <td class ="tableFormat" ng-if="x.Format === 1">
+							<!--{{ x.M15 }}-->
+						</td>
+                        <td class ="table3" ng-if="x.Format != 1">
+							<!--{{ x.M15 }}-->
+                            <input type="text" name ="m04" class ="input1" value = "{{ labelidvalues[x.M15+'M'] }}"/>
+						</td>
+                        <!-- F04-->
+                         <td class ="tableFormat" ng-if="x.Format === 1">
+							<!--{{ x.F04 }}-->
+						</td>
+                        <td class ="female" ng-if="x.Format != 1">
+							<!--{{ x.F04 }}-->
+                            <input type="text" name ="m04" class ="input2" value = "{{ labelidvalues[x.F04+'M'] }}"/>
+						</td>
+                        <!-- F514 -->
+                         <td class ="tableFormat" ng-if="x.Format === 1">
+							<!--{{ x.F514 }}-->
+						</td>
+                        <td class ="female" ng-if="x.Format != 1">
+							<!--{{ x.F514 }}-->
+                            <input type="text" name ="m04" class ="input2" value = "{{ labelidvalues[x.F514+'M'] }}"/>
+						</td>
+                        <!-- F15 -->
+                        <td class ="tableFormat" ng-if="x.Format === 1">
+							<!--{{ x.F15 }}-->
+						</td>
+                        <td class ="female" ng-if="x.Format != 1">
+							<!--{{ x.F15 }}-->
+                            <input type="text" name ="m04" class ="input2" value = "{{ labelidvalues[x.F15+'M'] }}"/>
+						</td>
+
+                        <!-- MM04 -->
+                        <td class ="tableFormat" ng-if="x.Format === 1">
+							<!--{{ x.MM04 }}-->
+						</td>
+                        <td class ="table2" ng-if="x.Format != 1">
+							<!--{{ x.MM04 }}-->
+                             <input type="text" name ="m04" class ="input1" value = "{{ labelidvalues[x.MM04+'MM'] }}"/>
+						</td>
+
+                        <!-- MM514 -->
+                        <td class ="tableFormat" ng-if="x.Format === 1">
+							<!--{{ x.MM514 }}-->
+						</td>
+						<td class ="table3" ng-if="x.Format != 1">
+							<!--{{ x.MM514 }}-->
+                             <input type="text" name ="m04" class ="input1" value = "{{ labelidvalues[x.MM514+'MM'] }}"/>
+						</td>
+                        <!-- MM15 -->
+                         <td class ="tableFormat" ng-if="x.Format === 1">
+							<!--{{ x.MM15 }}-->
+						</td>
+                        <td class ="table3" ng-if="x.Format != 1">
+							<!--{{ x.MM15 }}-->
+                             <input type="text" name ="m04" class ="input1" value = "{{ labelidvalues[x.MM15+'MM'] }}"/>
+						</td>
+
+                        <!-- MF04 -->
+                         <td class ="tableFormat" ng-if="x.Format === 1">
+							<!--{{ x.MF04 }}-->
+						</td>
+                        <td class ="female" ng-if="x.Format != 1">
+							<!--{{ x.MF04 }}-->
+                             <input type="text" name ="m04" class ="input2" value = "{{ labelidvalues[x.MF04+'MM'] }}"/>
+						</td>
+
+                        <!-- MF514 -->
+                         <td class ="tableFormat" ng-if="x.Format === 1">
+							<!--{{ x.MF514 }}-->
+						</td>
+                        <td class ="female" ng-if="x.Format != 1">
+							<!--{{ x.MF514 }}-->
+                             <input type="text" name ="m04" class ="input2" value = "{{ labelidvalues[x.MF514+'MM'] }}"/>
+						</td>
+                        <!-- MF15 -->
+                        <td class ="tableFormat" ng-if="x.Format === 1">
+							<!--{{ x.MF15 }}-->
+						</td>
+                        <td class ="female" ng-if="x.Format != 1">
+							<!--{{ x.MF15 }}-->
+                             <input type="text" name ="m04" class ="input2" value = "{{ labelidvalues[x.MF15+'MM'] }}"/>
+						</td>
+
+					</tr>
+					
+				</tbody>
+			</table>
+		<!-- </div>
+      </div> -->
+     </div>
+	</div>
+</div>
+</div>
+</body>
+</html>

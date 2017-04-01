@@ -1,0 +1,210 @@
+﻿<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<div class="well" ng-init="init()"><h1>Validation</h1></div>
+<div id="messages"></div>
+<div>
+    <form class="form-group-sm">
+       
+        <div class="form-group" ng-show="temphierarchy[0].FacilityTypeName=='Federal Ministry of Health'">            
+            <label class="control-label col-sm-2">Select region:</label>
+            <div class="col-sm-10">
+                <select ng-model="sltRegion" ng-change="fillZone(sltRegion)" class="form-control ">
+                    <option value="1">Tigray</option>
+                    <option value="2">Afar</option>
+                    <option value="3">Amhara</option>
+                    <option value="4">Oromiya</option>
+                    <option value="5">Somali</option>
+                    <option value="6">Beneshangul Gumuz</option>
+                    <option value="7">SNNPR</option>
+                    <option value="12">Gambella</option>
+                    <option value="13">Harari</option>
+                    <option value="14">Addis Ababa</option>
+                    <option value="15">Dire Dawa</option>
+                </select>
+                </div>
+                <!--<div class="col-sm-10">
+            <select ng-model="levelSelect" class="form-control" hidden="hidden">
+                <option value="1">All</option>
+                <option value="2">Region</option>
+                <option value="3">Zone</option>
+                <option value="4">Woreda</option>
+            </select>
+            <br ng-show="levelSelect>1" />
+            <label ng-show="levelSelect>2">Select zone:</label>
+            <select ng-model="sltZone" ng-change="fillWoreda(sltZone)" ng-show="levelSelect>2">
+                <option ng-repeat="zone in zones" value="{{zone.HMISCode}}">{{zone.FacilityName}}</option>
+            </select><br ng-show="levelSelect>2" />
+            <label ng-show="levelSelect>3">Select woreda:</label>
+            <select ng-model="sltWoreda" ng-show="levelSelect>3">
+                <option ng-repeat="woreda in Woredas" value="{{woreda.HMISCode}}">{{woreda.FacilityName}}</option>
+            </select><br ng-show="levelSelect>3" />
+        </div>-->
+            </div>
+        <div class="form-group" ng-init="fillZone(temphierarchy[0].RegionId)" ng-show="temphierarchy[0].FacilityTypeName=='Regional Health Bureau' &&  temphierarchy[0].RegionId!=14 && temphierarchy[0].RegionId!=15">
+            <label class="control-label col-sm-2">Select zone:</label>
+            <div class="col-sm-10">
+                <select ng-model="sltZone"  class="form-control" >
+                    <option ng-repeat="zone in zones" value="{{zone.HMISCode}}">{{zone.FacilityName}}</option>
+                </select>
+            </div>          
+        </div>
+        <div class="form-group" ng-init="fillWoreda(temphierarchy[0].ZoneId)" ng-show="temphierarchy[0].FacilityTypeName=='Zonal Health Department' || temphierarchy[0].RegionId==14 || temphierarchy[0].RegionId==15 && temphierarchy[0].FacilityTypeName!='Woreda Health Bureau' && temphierarchy[0].FacilityTypeName!='Federal Ministry of Health'">
+            <label class="control-label col-sm-2" ng-show="temphierarchy[0].FacilityTypeName!='Woreda Health Bureau'">Select woreda:</label>
+            <div class="col-sm-10" ng-show="temphierarchy[0].FacilityTypeName!='Woreda Health Bureau'">
+                <select ng-model="sltWoreda" class="form-control">
+                    <option ng-repeat="woreda in Woredas | filter : temphierarchy[0].RegionId" value="{{woreda.HMISCode}}">{{woreda.FacilityName}}</option>
+                </select>
+            </div>
+           <!-- <button type="button" class="btn btn-default">Drilldown</button>-->
+        </div>
+        <div class="form-group" ng-init="fillfacilities(temphierarchy[0].WoredaId)" ng-show="temphierarchy[0].FacilityTypeName=='Woreda Health Bureau'">
+            <label class="control-label col-sm-2">Select facility:</label>
+            <div class="col-sm-10">
+                <select ng-model="sltfacility" class="form-control">
+                    <option ng-repeat="facility in facilities" value="{{facility.HMISCode}}">{{facility.FacilityName}}</option>
+                </select>
+            </div>
+           <!-- <button type="button" class="btn btn-default">Drilldown</button>-->
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="email">Data element type:</label>
+            <div class="col-sm-10">
+                <select ng-model="dataElementType" class="form-control">
+                    <option value="6">Service Monthly</option>
+                    <option value="7">Service Yearly</option>
+                    <option value="2">Disease Morbidity</option>
+                    <option value="3">Disease Mortality</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="pwd">Year:</label>
+            <div class="col-sm-10">
+                <input type="number" ng-model="validationYear" class="form-control" max="2010" min="2001" value="2009" />
+            </div>
+        </div>
+       
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="pwd">Month:</label>
+            <div class="col-sm-10">
+                <select id="vMonth" ng-model="validationMonth" class="form-control">
+                    <option value="1">Meskerem</option>
+                    <option value="2">tikimt</option>
+                    <option value="3">Hidar</option>
+                    <option value="4">Tahisas</option>
+                    <option value="5">Tir</option>
+                    <option value="6">Yekatit</option>
+                    <option value="7">Megabit</option>
+                    <option value="8">miyazia</option>
+                    <option value="9">Ginbot</option>
+                    <option value="10">sene</option>
+                    <option value="11">Hamle</option>
+                    <option value="12">nehase</option>
+                </select>
+            </div>
+        </div>
+       
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button  type="button" class="btn btn-default" ng-click="validateNow()">Validate</button>
+            </div>
+        </div>
+        <p></p>
+        <div ng-if="!showValidation">
+        </div>
+
+        <div id="loader" style="visibility:hidden"></div>
+        
+        <div ng-if="showValidation" ng-show="uniqueError.length>0">
+            
+            <table id="reportTable" width:"100%" ng-show="uniqueError.length>0">
+                <caption></caption>
+                <thead>
+                    <tr>
+                        <!--<th><strong>Woreda</strong></th>
+                        <th><strong>Zone</strong></th>
+                        <th><strong>Region</strong></th>
+                        <th><strong>FacilityName</strong></th>-->
+                        <th><strong>Message</strong></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="error in uniqueError" end-of-repeat-directive>
+                        <!--<td>{{error.woreda}}</td>
+                        <td>{{error.zone}}</td>
+                        <td>{{error.region}}</td>
+                        <td>{{error.facilityName}}</td>-->
+                        <td>{{error.message}}</td>
+                    </tr>
+                </tbody>              
+            </table>
+        </div>
+
+        <div ng-if="temphierarchy[0].FacilityTypeName=='Federal Ministry of Health'">
+            <div ng-repeat="x in validateData">
+                <span class="label label-warning" id="{{x.LabelID}}_labelWarning"></span>
+                <span class="label label-danger" id="{{x.LabelID}}_labelError"></span>
+                <input ng-model="lid"
+                       min="0"
+                       type="hidden"
+                       id="{{x.LabelID}}"
+                       value="{{x.Value}}" class="{{x.LabelID}}_{{x.RegionID}}_{{dataElementType}}_{{validationYear}}_{{validationMonth}}"
+                       tag="{{x.LabelID}}_{{x.RegionID}}_{{dataElementType}}_{{validationYear}}_{{validationMonth}}" />
+            </div>
+        </div>
+        <div ng-if="temphierarchy[0].FacilityTypeName=='Regional Health Bureau' &&  temphierarchy[0].RegionId!=14 && temphierarchy[0].RegionId!=15">
+            <div ng-repeat="x in validateData">
+                <span class="label label-warning" id="{{x.LabelID}}_labelWarning"></span>
+                <span class="label label-danger" id="{{x.LabelID}}_labelError"></span>
+                <input ng-model="lid"
+                       min="0"
+                       type="hidden"
+                       id="{{x.LabelID}}"
+                       value="{{x.Value}}" class="{{x.LabelID}}_{{x.ZoneID}}_{{dataElementType}}_{{validationYear}}_{{validationMonth}}"
+                       tag="{{x.LabelID}}_{{x.ZoneID}}_{{dataElementType}}_{{validationYear}}_{{validationMonth}}" />
+            </div>
+        </div>
+        <div ng-if="temphierarchy[0].FacilityTypeName=='Zonal Health Department' || temphierarchy[0].RegionId==14 || temphierarchy[0].RegionId==15">
+            <div ng-repeat="x in validateData">
+                <span class="label label-warning" id="{{x.LabelID}}_labelWarning"></span>
+                <span class="label label-danger" id="{{x.LabelID}}_labelError"></span>
+                <input ng-model="lid"
+                       min="0"
+                       type="hidden"
+                       id="{{x.LabelID}}"
+                       value="{{x.Value}}" class="{{x.LabelID}}_{{x.WoredaID}}_{{dataElementType}}_{{validationYear}}_{{validationMonth}}"
+                       tag="{{x.LabelID}}_{{x.WoredaID}}_{{dataElementType}}_{{validationYear}}_{{validationMonth}}" />
+            </div>
+        </div>
+    </form>
+    <!--</table>-->
+    {{status}}
+    <div ng-show="showNoErrorMessage">
+        <span class="label label-success">No error or warning found!</span>
+    </div>
+
+</div>

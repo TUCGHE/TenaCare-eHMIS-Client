@@ -1,0 +1,1282 @@
+<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+
+<body>
+
+    <!-- Write your comments here -->
+    <div ng-app="eHMISApp" ng-controller="analyticsCtrl">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 topSetLocationSiteSetting" style="border:none">
+                    <h6 style="text-align:center; color:steelblue"><b>{{analytics['dataAnalytics']}}</b> </h6>
+                </div>
+            </div>
+            <div class="row row-eq-height">
+                <div class="col-sm-2 topTypeSelection">
+                    <form>
+                        <input type="radio" ng-model="interfaceVisibility"
+                               value="showParameters"><span style="text-align:center; color:steelblue"><b>1). {{analytics['parameterSelection']}}</b></span>
+                        <br />
+                        <input type="radio" ng-model="interfaceVisibility"
+                               value="showReports"><span style="text-align:center; color:steelblue"><b>2). {{analytics['reportDisplay']}}</b></span>
+                        <br />
+                        <input type="radio" ng-model="interfaceVisibility"
+                               value="showCharts"><span style="text-align:center; color:steelblue"><b>3). {{analytics['chartDisplay']}}</b></span>
+                    </form>
+                </div>
+                <div class="col-sm-6 topTypeSelection">
+                    <form ng-show="interfaceVisibility=='showParameters'">
+                        <input type="radio" ng-model="configType" value="ReportType">
+                        <span style="text-align:center; color:steelblue"><b>{{analytics['dataElementsIndicators']}}</b></span>
+                        <br />
+                        <input type="radio" ng-model="configType" value="Institutions">
+                        <span style="text-align:center; color:steelblue"><b>{{analytics['institutions']}}</b></span>
+                        <br />
+                        <input type="radio" ng-model="configType" value="Period">
+                        <span style="text-align:center; color:steelblue"><b>{{analytics['period']}}</b></span>
+                    </form>
+                    <div ng-show="interfaceVisibility=='showReports'">
+                        <form>
+                            <input type="radio" ng-model="pivotType.type" value="pivotdataelements" checked>
+                            <span style="text-align:center; color:steelblue"><b>{{analytics['pivotByDataElements']}}</b></span>
+                            &nbsp;&nbsp;&nbsp;
+                            <input type="radio" ng-model="pivotType.type" value="pivotinstitutions" checked>
+                            <span style="text-align:center; color:steelblue"><b>{{analytics['pivotByInstitutions']}}</b></span>
+                            &nbsp;&nbsp;&nbsp;
+                            <!--<input type="radio" ng-model="pivotType.type" value="pivotperiod" checked>
+                            <span style="text-align:center; color:steelblue"><b>Pivot By Period</b></span>-->
+                            <input type="radio" ng-model="pivotType.type" value="row">
+                            <span style="text-align:center; color:steelblue"><b>{{analytics['noPivotShowInRows']}}</b></span>
+                        </form>                       
+                        <button type="button" class="btn btn-primary btn-setLocation"
+                                ng-show="interfaceVisibility=='showReports'"
+                                ng-click="showReports()">
+                            {{analytics['clickHereToShowReport']}}
+                        </button>
+                    </div>
+                    <div ng-show="interfaceVisibility=='showCharts'">
+                        <div id="drill-nav" class="drill-nav">
+                            
+                        </div>
+                    </div>
+                    </div>
+                <div class="col-sm-4 topTypeSelection">
+                    <span style="font-size: 85%; padding:0px">
+                        <b> {{analytics['aggregationType']}}: <span style="color:green">
+                        {{analytics[institutionAggrOptions.aggrType] | uppercase}}
+                            <!--{{institutionAggrOptions.aggrType | uppercase }}-->                                                                 
+                            
+                            
+                            </span>/ &nbsp;&nbsp;</b>
+
+                        <b> {{analytics['facilityType']}}:</b>
+                        <span ng-repeat="facilityType in FacilityTypeData"
+                              ng-if="checkedFacTypes[facilityType.FacilityTypeName]" style="color:green">
+                            <b>{{facilityType.FacilityTypeName}}, &nbsp;</b>
+                        </span>
+                        /
+                        <b> {{analytics['reportingTo']}}: </b>
+                        <span ng-if="institutionAggrOptions.reportingFacilityTypeId==10" style="color:green">{{analytics['region']}}</span>
+                        <span ng-if="institutionAggrOptions.reportingFacilityTypeId==9" style="color:green">{{analytics['zone']}}</span>
+                        <span ng-if="institutionAggrOptions.reportingFacilityTypeId==8" style="color:green">{{analytics['district']}}</span>
+                        <span ng-if="institutionAggrOptions.reportingFacilityTypeId==-1" style="color:green"></span>
+                        <b>
+                            <br />
+                            {{analytics['dataElementType']}}:
+                            <span ng-if="currentClicked.service" style="color: green">{{analytics['service']}}</span>
+                            <span ng-if="currentClicked.disease" style="color: green">{{analytics['disease']}}  {{diseaseOptions.caseDeath | uppercase}}</span>
+                            <span ng-if="currentClicked.indicator" style="color: green">{{analytics['indicator']}}</span>
+                        </b>
+                        <br />
+                        <b>
+                            {{analytics['period']}}: &nbsp;&nbsp;
+                            <span ng-if="PeriodRange.range=='PeriodRangeYearly'" style="color: green">
+                            {{analytics['efyYear']}}:
+                                <span ng-if="PeriodSelect.StartFiscalYear!=PeriodSelect.EndFiscalYear" style="color: green">
+                                    {{PeriodSelect.StartFiscalYear}} - {{PeriodSelect.EndFiscalYear}}
+                                </span>
+                                <span ng-if="PeriodSelect.StartFiscalYear==PeriodSelect.EndFiscalYear" style="color: green">
+                                    {{PeriodSelect.StartFiscalYear}}
+                                </span>
+                            </span>
+                            <span ng-if="PeriodRange.range=='PeriodRangeQuarterly'" style="color: green">
+                                {{analytics['efyYear']}}: {{PeriodSelect.StartFiscalYear}} &nbsp;&nbsp;
+                                {{analytics['quarter']}}: {{PeriodSelect.StartQuarter}} - {{PeriodSelect.EndQuarter}}
+                            </span>
+                            <span ng-if="PeriodRange.range=='PeriodRangeMonthly'" style="color: green">
+                                {{analytics['efyYear']}}: {{PeriodSelect.StartFiscalYear}} &nbsp;&nbsp;
+                                {{analytics['efyMonth']}}: {{PeriodSelect.StartMonth}} - {{PeriodSelect.EndMonth}}
+                            </span>
+                            <span ng-if="PeriodRange.range=='PeriodRangeYearMonthly'" style="color: green">
+                                <span ng-if="PeriodSelect.StartFiscalYear!=PeriodSelect.EndFiscalYear" style="color: green">
+                                    {{analytics['start']}}: <span style="color: orangered">  {{PeriodSelect.StartFiscalYear}} </span>
+    ({{PeriodSelect.StartYearStartMonth}} - {{PeriodSelect.StartYearEndMonth}}) <~> {{analytics['end']}} <span style="color: orangered">
+    {{PeriodSelect.EndFiscalYear}}
+</span> ({{PeriodSelect.EndYearStartMonth}} - {{PeriodSelect.EndYearEndMonth}})
+</span>
+                                <span ng-if="PeriodSelect.StartFiscalYear==PeriodSelect.EndFiscalYear" style="color: green">
+                                    <span style="color: orangered">
+                                        {{PeriodSelect.StartFiscalYear}} </span> ({{PeriodSelect.StartYearStartMonth}} - {{PeriodSelect.EndYearEndMonth}})
+                                    </span>                               
+                            </span>
+                            <span ng-if="PeriodRange.range=='PeriodRangeYearQuarterly'" style="color: green">
+                                <span ng-if="PeriodSelect.StartFiscalYear!=PeriodSelect.EndFiscalYear" style="color: green">
+                                    {{analytics['start']}}: <span style="color: orangered">  {{PeriodSelect.StartFiscalYear}} </span>
+                                    (Q{{PeriodSelect.StartYearStartQuarter}} - Q{{PeriodSelect.StartYearEndQuarter}}) <~>
+                                        {{analytics['end']}} <span style="color: orangered">
+                                            {{PeriodSelect.EndFiscalYear}}
+                                        </span> (Q{{PeriodSelect.EndYearStartQuarter}} - Q{{PeriodSelect.EndYearEndQuarter}})
+                                </span>
+                                <span ng-if="PeriodSelect.StartFiscalYear==PeriodSelect.EndFiscalYear" style="color: green">
+                                    <span style="color: orangered">
+                                        {{PeriodSelect.StartFiscalYear}}
+                                    </span> (Q{{PeriodSelect.StartYearStartQuarter}} - Q{{PeriodSelect.EndYearEndQuarter}})
+                                </span>
+                            </span>
+                        </b>
+
+                    </span>
+                </div>
+            </div>
+
+            <div ng-switch="interfaceVisibility">
+                <div ng-switch-when="showParameters">
+                    <div class="row row-eq-height">
+                        <div class="col-sm-3 topTypeSelectionLeft">
+                            <div ng-switch="configType">
+                                <div ng-switch-when="ReportType">
+                                    <h4>
+                                        {{analytics['reportType']}} &nbsp;&nbsp;
+                                        <button type="button" class="btn btn-primary btn-setLocation" ng-click="clearCategoryService()">
+                                            {{analytics['clearAllSelections']}}
+                                        </button>
+                                    </h4>
+
+
+                                    <ul style="list-style-type:none">
+                                        <li>
+                                            <span ng-show="true">
+                                                <img ng-click="getCategory(1, 1, 'service')"
+                                                     src="img/plus.png" width="20" height="20"
+                                                     ng-show="(serviceClicked != true)">
+                                                <img ng-click="getCategory(1, 1, 'service')"
+                                                     src="img/minus.png" width="20" height="20"
+                                                     ng-show="(serviceClicked == true)">
+                                            </span>
+                                            <input type="checkbox" ng-model="checkedState['service']" class="chkboxAnalytics"
+                                                   ng-checked="checkedState['service']"
+                                                   ng-change="checkedStateChanged(1, 'service', null, checkedState['service'], category1['service'],0)">
+                                            <span ng-click="getCategory(1, 1, 'service')">
+                                                <b class="Analytics">{{analytics['service']}}</b>
+                                            </span>
+                                            <div ng-show="serviceClicked">
+                                                <ul class="customReport">
+                                                    <li ng-repeat="level1 in category1['service']">
+                                                        <span ng-show="true">
+                                                            <img ng-click="getCategory(1, 2, level1.category1)"
+                                                                 src="img/plus.png" width="20" height="20"
+                                                                 ng-show="(level1ExpandChildren[level1.category1] != true)">
+                                                            <img ng-click="getCategory(1, 2, level1.category1)"
+                                                                 src="img/minus.png" width="20" height="20"
+                                                                 ng-show="(level1ExpandChildren[level1.category1] == true)">
+                                                        </span>
+                                                        <input type="checkbox" class="chkboxAnalytics"
+                                                               ng-model="checkedState[level1.category1]"
+                                                               ng-checked="checkedState[level1.category1]"
+                                                               ng-change="checkedStateChanged(1, level1.category1, 'service', checkedState[level1.category1], category2[level1.category1],1)">
+                                                        <span ng-click="getCategory(1, 2, level1.category1)">
+                                                            <b class="Analytics"> {{ level1.category1 }} </b>
+                                                        </span> <!-- The Region got Clicked..level 0 -->
+                                                        <div ng-show="level1ExpandChildren[level1.category1]">
+                                                            <ul class="customReport">
+                                                                <li ng-repeat="level2 in category2[level1.category1]">
+                                                                    <input type="checkbox" class="chkboxAnalytics"
+                                                                           ng-model="checkedState[level2.category2]"
+                                                                           ng-checked="checkedState[level2.category2]"
+                                                                           ng-change="checkedStateChanged(1, level2.category2, level1.category1, checkedState[level2.category2], undefined,2)">
+                                                                    <span ng-click="getCategory(1, 3, level2.category2)">
+                                                                        <b class="Analytics"> {{ level2.category2 }}  </b>
+                                                                    </span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </ul>
+
+                                    <!--Disease-->
+                                    <ul style="list-style-type:none">
+                                        <li>
+                                            <span ng-show="true">
+                                                <img ng-click="getCategory(2, 1, 'disease')"
+                                                     src="img/plus.png" width="20" height="20"
+                                                     ng-show="(diseaseClicked != true)">
+                                                <img ng-click="getCategory(2, 1, 'disease')"
+                                                     src="img/minus.png" width="20" height="20"
+                                                     ng-show="(diseaseClicked == true)">
+                                            </span>
+                                            <input type="checkbox" ng-model="checkedState['disease']" class="chkboxAnalytics"
+                                                   ng-checked="checkedState['disease']"
+                                                   ng-change="checkedStateChanged(2, 'disease', null, checkedState['disease'], category1['disease'],0)">
+                                            <span ng-click="getCategory(2, 1, 'disease')">
+                                                <b class="Analytics">{{analytics['disease']}}</b>
+                                            </span>
+                                            <div ng-show="diseaseClicked">
+                                                <!--<ul class="customReport" style="margin:0px">
+                                                    <li style="margin:0px">-->
+                                                        <table width:"100%"
+                                                               style="padding:0px; margin:0px" class="table table-hover table-responsive">
+                                                            <thead class="thead-default">
+                                                                <tr>
+                                                                    <th colspan="5">
+                                                                        {{analytics['chooseOptions']}}:
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>
+                                                                        <form>
+                                                                            <input type="checkbox" ng-model="diseaseOptions.per1000Population" 
+                                                                                   ng-checked="diseaseOptions.per1000Population">
+                                                                                   {{analytics['showCasesOrDeathsPer']}} 
+                                                                                    <span ng-show="diseaseOptions.per1000Population==true"> 
+                                                                                        <br />
+                                                                                        <input type="number" class="population"
+                                                                                                   ng-model="diseaseOptions.populationMultiplier">
+                                                                                        <br />
+                                                                                    </span>
+                                                                                    
+                                                                                   {{analytics['population']}}
+                                                                        </form>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <form>
+                                                                            <input type="radio" ng-model="diseaseOptions.caseDeath" value="morbidity" ng-checked="true">{{analytics['morbidity']}}
+                                                                            <input type="radio" ng-model="diseaseOptions.caseDeath" value="mortality">{{analytics['mortality']}}
+                                                                        </form>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <b>{{analytics['ageCategory']}}:</b> <br />
+                                                                        <input type="checkbox" ng-model="diseaseOptions.zeroToFour"
+                                                                               ng-checked="diseaseOptions.zeroToFour"> 0-4
+                                                                        <br />
+                                                                        <input type="checkbox" ng-model="diseaseOptions.fiveToFourteen"
+                                                                               ng-checked="diseaseOptions.fiveToFourteen"> 5-14
+                                                                        <br />
+                                                                        <input type="checkbox" ng-model="diseaseOptions.fifteenAndAbove"
+                                                                               ng-checked="diseaseOptions.fifteenAndAbove"> 15 {{analytics['andAbove']}}
+                                                                        <br />
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <b>{{analytics['gender']}}:</b> <br />
+                                                                        <input type="checkbox" ng-model="diseaseOptions.male"
+                                                                               ng-checked="diseaseOptions.male"> {{analytics['male']}}
+                                                                        <br />
+                                                                        <input type="checkbox" ng-model="diseaseOptions.female"
+                                                                               ng-checked="diseaseOptions.female"> {{analytics['female']}}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <b>{{analytics['department']}}:</b>
+                                                                        <br />
+                                                                        <input type="checkbox" ng-model="diseaseOptions.opd" ng-disabled="diseaseOptions.caseDeath=='mortality'"
+                                                                               ng-checked="diseaseOptions.opd"> {{analytics['opd']}}
+                                                                        <br />
+                                                                        <input type="checkbox" ng-model="diseaseOptions.ipd"
+                                                                               ng-checked="diseaseOptions.ipd"> {{analytics['ipd']}}
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    <!--</li>
+                                                </ul>-->
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <!--Indicator-->
+                                    <ul style="list-style-type:none">
+                                        <li>
+                                            <span ng-show="true">
+                                                <img ng-click="getCategory(3, 1, 'indicator')"
+                                                     src="img/plus.png" width="20" height="20"
+                                                     ng-show="(indicatorClicked != true)">
+                                                <img ng-click="getCategory(3, 1, 'indicator')"
+                                                     src="img/minus.png" width="20" height="20"
+                                                     ng-show="(indicatorClicked == true)">
+                                            </span>
+                                            <input type="checkbox" ng-model="checkedIndicatorState['indicator']" class="chkboxAnalytics"
+                                                   ng-checked="checkedIndicatorState['indicator']"
+                                                   ng-change="checkedStateChanged(3, 'indicator', null, checkedIndicatorState['indicator'], indicatorCategory1['indicator'],0)">
+                                            <span ng-click="getCategory(3, 1, 'indicator')">
+                                                <b class="Analytics">{{analytics['indicators']}}</b>
+                                            </span>
+                                            <div ng-show="indicatorClicked">
+                                                <ul class="customReport">
+                                                    <li ng-repeat="level1 in indicatorCategory1['indicator']">
+                                                        <span ng-show="true">
+                                                            <img ng-click="getCategory(3, 2, level1.category1)"
+                                                                 src="img/plus.png" width="20" height="20"
+                                                                 ng-show="(level1ExpandIndicator[level1.category1] != true)">
+                                                            <img ng-click="getCategory(3, 2, level1.category1)"
+                                                                 src="img/minus.png" width="20" height="20"
+                                                                 ng-show="(level1ExpandIndicator[level1.category1] == true)">
+                                                        </span>
+                                                        <input type="checkbox" class="chkboxAnalytics"
+                                                               ng-model="checkedIndicatorState[level1.category1]"
+                                                               ng-checked="checkedIndicatorState[level1.category1]"
+                                                               ng-change="checkedStateChanged(3, level1.category1, 'indicator', checkedIndicatorState[level1.category1], indicatorCategory2[level1.category1],1)">
+                                                        <span ng-click="getCategory(3, 2, level1.category1)">
+                                                            <b class="Analytics"> {{ level1.category1 }} </b>
+                                                        </span>
+                                                        <div ng-show="level1ExpandIndicator[level1.category1]">
+                                                            <ul class="customReport">
+                                                                <li ng-repeat="level2 in indicatorCategory2[level1.category1]">
+                                                                    <input type="checkbox" class="chkboxAnalytics"
+                                                                           ng-model="checkedIndicatorState[level2.category2]"
+                                                                           ng-checked="checkedIndicatorState[level2.category2]"
+                                                                           ng-change="checkedStateChanged(3, level2.category2, level1.category1, checkedIndicatorState[level2.category2], undefined,2)">
+                                                                    <span ng-click="getCategory(3, 3, level2.category2)">
+                                                                        <b class="Analytics"> {{ level2.category2 }}  </b>
+                                                                    </span>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div ng-switch-when="Institutions">
+                                    <h4>{{analytics['workingInstitutions']}}:</h4>
+                                    <b>{{ temphierarchy[0].FacilityName }}/</b>
+                                    <!--<span><b>Facility Type ID: &nbsp;&nbsp;{{  temphierarchy[0].FacilityTypeId }}</b></span>-->
+
+                                    <div class="row row-eq-height">
+                                        <div class="col-sm-12 topTypeSelection ">
+                                            <b> {{analytics['aggregationType']}} </b>
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <form>
+                                                            <span ng-if="(temphierarchy[0].FacilityTypeId ==11)">
+                                                                <input type="radio" ng-model="institutionAggrOptions.aggrType"
+                                                                       value="federal"><span style="text-align:center; color:steelblue"><b>{{analytics['federal']}}</b></span>
+                                                                <!--<br />-->
+                                                            </span>
+                                                            <span ng-if="(temphierarchy[0].FacilityTypeId ==11) ||
+                                                    (temphierarchy[0].FacilityTypeId ==10)">
+                                                                <input type="radio" ng-model="institutionAggrOptions.aggrType"
+                                                                       value="region"><span style="text-align:center; color:steelblue"><b>{{analytics['regional']}}</b></span>
+                                                                <!--<br />-->
+                                                            </span>
+                                                            <span ng-if="(temphierarchy[0].FacilityTypeId ==11) ||
+                                                    (temphierarchy[0].FacilityTypeId ==10) ||
+                                                    (temphierarchy[0].FacilityTypeId ==9) ">
+                                                                <input type="radio" ng-model="institutionAggrOptions.aggrType"
+                                                                       value="zone"><span style="text-align:center; color:steelblue"><b>{{analytics['zonal']}}</b></span>
+                                                            </span>
+                                                            <br />
+                                                            <span ng-if="(temphierarchy[0].FacilityTypeId ==11) ||
+                                                    (temphierarchy[0].FacilityTypeId ==10) ||
+                                                    (temphierarchy[0].FacilityTypeId ==9) ||
+                                                    (temphierarchy[0].FacilityTypeId ==8) ">
+                                                                <input type="radio" ng-model="institutionAggrOptions.aggrType"
+                                                                       value="district"><span style="text-align:center; color:steelblue"><b>{{analytics['district']}}</b></span>
+                                                                <!--<br />-->
+                                                            </span>
+                                                            <span ng-if="(temphierarchy[0].FacilityTypeId ==11) ||
+                                                    (temphierarchy[0].FacilityTypeId ==10) ||
+                                                    (temphierarchy[0].FacilityTypeId ==9) ||
+                                                    (temphierarchy[0].FacilityTypeId ==8) ">
+                                                                <input type="radio" ng-model="institutionAggrOptions.aggrType"
+                                                                       value="facility"><span style="text-align:center; color:steelblue"><b>{{analytics['facility']}}</b></span>
+                                                            </span>
+                                                            <span style="text-align:center; color:steelblue"
+                                                                  ng-if="(temphierarchy[0].FacilityTypeId <=7) || (temphierarchy[0].FacilityTypeId>11)">
+                                                                <input type="radio" ng-model="institutionAggrOptions.aggrType" checked
+                                                                       value="none">
+                                                                <span style="text-align:center; color:steelblue"><b>{{analytics['none']}}</b></span>
+                                                            </span>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row row-eq-height">
+                                        <div class="col-sm-12 topTypeSelection">
+                                            <!--<div ng-if="institutionAggrOptions.aggrType == 'facility'">-->
+                                            <span><b>{{analytics['facilityTypes']}}</b></span>
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <div class="customReport customLevel0Report">
+                                                            <!--<span ng-repeat="facilityType in FacilityTypeData">-->
+                                                            <form ng-repeat="facilityType in FacilityTypeData">
+                                                                <input type="checkbox" ng-model="checkedFacTypes[facilityType.FacilityTypeName]"
+                                                                       ng-checked="checkedFacTypes[facilityType.FacilityTypeName]"
+                                                                       ng-change="checkFacilityTypes(facilityType.FacilityTypeName)">
+                                                                <span style="text-align:center; color:steelblue">
+                                                                    <b>{{facilityType.FacilityTypeName}}</b>
+                                                                </span>
+                                                            </form>
+                                                            <!--</span>-->
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <span><b>{{analytics['reportingTo']}}</b></span>
+                                            <!--<ul class="customReport customLevel0Report">
+                                                <li>-->
+                                            <table>
+                                                <tr>
+                                                    <td>
+                                                        <form>
+                                                            <span>
+                                                                <input type="radio" ng-model="institutionAggrOptions.reportingFacilityTypeId"
+                                                                       value=-1><span style="text-align:center; color:steelblue"><b>{{analytics['none']}}</b></span>
+                                                            </span>
+                                                            <span ng-if="(temphierarchy[0].FacilityTypeId ==11) ||
+                                                                         (temphierarchy[0].FacilityTypeId ==10)">
+                                                                <input type="radio" ng-model="institutionAggrOptions.reportingFacilityTypeId"
+                                                                       value=10><span style="text-align:center; color:steelblue"><b>{{analytics['regional']}}</b></span>
+                                                            </span>
+                                                            <span ng-if="(temphierarchy[0].FacilityTypeId ==11) ||
+                                                                         (temphierarchy[0].FacilityTypeId ==10) ||
+                                                                         (temphierarchy[0].FacilityTypeId ==9) ">
+                                                                <input type="radio" ng-model="institutionAggrOptions.reportingFacilityTypeId"
+                                                                       value=9><span style="text-align:center; color:steelblue"><b>{{analytics['zonal']}}</b></span>
+                                                            </span>
+                                                            <span ng-if="(temphierarchy[0].FacilityTypeId ==11) ||
+                                                                         (temphierarchy[0].FacilityTypeId ==10) ||
+                                                                         (temphierarchy[0].FacilityTypeId ==9) ||
+                                                                         (temphierarchy[0].FacilityTypeId ==8) ">
+                                                                <input type="radio" ng-model="institutionAggrOptions.reportingFacilityTypeId"
+                                                                       value=8><span style="text-align:center; color:steelblue"><b>{{analytics['district']}}</b></span>
+                                                            </span>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <!--</li>
+                                            </ul>-->
+                                            <!--</div>-->
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div ng-switch-when="Period">
+                                    <div class="row">
+                                        <div class="col-sm-12 ">
+                                            <div class="container-fluid">
+                                                <h4>{{analytics['pleaseSelectPeriodRange']}}</h4>
+                                                <form>
+                                                    <input type="checkbox" ng-model="PeriodSelect.aggregate"
+                                                           ng-checked="PeriodSelect.aggregate"
+                                                           ng-change="aggregateSet()">                                                    
+                                                    <span style="text-align:center; color:black; font: bold">
+                                                    <b>{{analytics['aggregateByMonthQuarter']}}</b></span>
+                                                    <br />
+                                                    <input type="checkbox" ng-model="PeriodSelect.aggregateAll"
+                                                           ng-checked="PeriodSelect.aggregateAll"
+                                                           ng-change="aggregateAllSet()">
+                                                    <span style="text-align:center; color:black; font: bold">
+                                                    <b>{{analytics['aggregateAll']}}</b></span> <span style="color:red"> ({{analytics['beta']}}) </span>
+                                                    &nbsp;&nbsp;
+                                                    <br />
+                                                    <br />
+                                                    <input type="radio" ng-model="PeriodRange.range"
+                                                           value="PeriodRangeYearly">
+                                                    <span style="text-align:center; color:steelblue"><b>{{analytics['yearly']}}</b></span>
+                                                    &nbsp;&nbsp;
+                                                    <input type="radio" ng-model="PeriodRange.range"
+                                                           value="PeriodRangeQuarterly">
+                                                    <span style="text-align:center; color:steelblue"><b>{{analytics['quarterly']}}</b></span>
+                                                    &nbsp; &nbsp;
+                                                    <input type="radio" ng-model="PeriodRange.range"
+                                                           value="PeriodRangeMonthly">
+                                                    <span style="text-align:center; color:steelblue"><b>{{analytics['monthly']}}</b></span>
+                                                    <br />
+                                                    <input type="radio" ng-model="PeriodRange.range"
+                                                           value="PeriodRangeYearMonthly">                                                    
+                                                    <span style="text-align:center; color:steelblue"><b>{{analytics['yearMonthRange']}}</b></span>
+                                                    <br />
+                                                    <input type="radio" ng-model="PeriodRange.range"
+                                                           value="PeriodRangeYearQuarterly">
+                                                    <span style="text-align:center; color:steelblue"><b>{{analytics['yearQuarterRange']}}</b></span>
+                                                    &nbsp;&nbsp;
+                                                    <br />
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12 ">
+                                            <div class="container-fluid">
+                                                <form role="form">
+                                                    <div class="form-group">
+                                                        <span ng-show="(PeriodRange.range=='PeriodRangeMonthly'||
+                                                                         PeriodRange.range=='PeriodRangeQuarterly'||
+                                                                         PeriodRange.range=='PeriodRangeYearMonthly'||
+                                                                         PeriodRange.range=='PeriodRangeYearQuarterly'|| 
+                                                                         PeriodRange.range=='PeriodRangeYearly')">
+                                                            <span ng-show="(PeriodRange.range=='PeriodRangeYearQuarterly'|| PeriodRange.range=='PeriodRangeYearMonthly'||PeriodRange.range=='PeriodRangeYearly')">
+                                                                <label>{{analytics['startFiscalYear']}}</label>
+                                                            </span>
+                                                            <span ng-show="PeriodRange.range=='PeriodRangeQuarterly'">
+                                                                <label>{{analytics['fiscalYear']}}</label>
+                                                            </span>
+                                                            <span ng-show="PeriodRange.range=='PeriodRangeMonthly'">
+                                                                <label>{{analytics['fiscalYear']}}</label>
+                                                            </span>
+                                                            <select class="form-control" ng-model="PeriodSelect.StartFiscalYear">
+                                                                <option value="0"></option>
+                                                                <option value="2020">2020</option>
+                                                                <option value="2019">2019</option>
+                                                                <option value="2018">2018</option>
+                                                                <option value="2017">2017</option>
+                                                                <option value="2016">2016</option>
+                                                                <option value="2015">2015</option>
+                                                                <option value="2014">2014</option>
+                                                                <option value="2013">2013</option>
+                                                                <option value="2012">2012</option>
+                                                                <option value="2011">2011</option>
+                                                                <option value="2010">2010</option>
+                                                                <option value="2009">2009</option>
+                                                                <option value="2008">2008</option>
+                                                                <option value="2007">2007</option>
+                                                                <option value="2006">2006</option>
+                                                                <option value="2005">2005</option>
+                                                                <option value="2004">2004</option>
+                                                                <option value="2003">2003</option>
+                                                                <option value="2002">2002</option>
+                                                                <option value="2001">2001</option>
+                                                                <option value="2000">2000</option>
+                                                            </select>
+                                                        </span>
+                                                        <!-- for the end year-monthly range: start -->
+                                                        <span ng-show="PeriodRange.range=='PeriodRangeYearMonthly'">
+                                                            <label>{{analytics['startMonth']}}</label>
+                                                            <select class="form-control" name="StartPeriod" ng-model="PeriodSelect.StartYearStartMonth">
+                                                                <option value="0"></option>
+                                                                <option value="1">{{analytics['hamle']}} (1)</option>
+                                                                <option value="2">{{analytics['nehase']}} (2)</option>
+                                                                <option value="3">{{analytics['meskerem']}} (3)</option>
+                                                                <option value="4">{{analytics['tikimt']}} (4)</option>
+                                                                <option value="5">{{analytics['hidar']}} (5)</option>
+                                                                <option value="6">{{analytics['tahisas']}} (6)</option>
+                                                                <option value="7">{{analytics['tir']}} (7)</option>
+                                                                <option value="8">{{analytics['yekatit']}} (8)</option>
+                                                                <option value="9">{{analytics['megabit']}} (9)</option>
+                                                                <option value="10">{{analytics['miyazia']}} (10)</option>
+                                                                <option value="11">{{analytics['ginbot']}} (11)</option>
+                                                                <option value="12">{{analytics['sene']}} (12)</option>
+                                                            </select>
+                                                            <label>{{analytics['endMonth']}}</label>
+                                                            <select class="form-control" name="EndPeriod" ng-model="PeriodSelect.StartYearEndMonth">
+                                                                <option value="0"></option>
+                                                                <option value="1">{{analytics['hamle']}} (1)</option>
+                                                                <option value="2">{{analytics['nehase']}} (2)</option>
+                                                                <option value="3">{{analytics['meskerem']}} (3)</option>
+                                                                <option value="4">{{analytics['tikimt']}} (4)</option>
+                                                                <option value="5">{{analytics['hidar']}} (5)</option>
+                                                                <option value="6">{{analytics['tahisas']}} (6)</option>
+                                                                <option value="7">{{analytics['tir']}} (7)</option>
+                                                                <option value="8">{{analytics['yekatit']}} (8)</option>
+                                                                <option value="9">{{analytics['megabit']}} (9)</option>
+                                                                <option value="10">{{analytics['miyazia']}} (10)</option>
+                                                                <option value="11">{{analytics['ginbot']}} (11)</option>
+                                                                <option value="12">{{analytics['sene']}} (12)</option>
+                                                            </select>
+                                                            <hr/>
+                                                        </span>
+                                                        <!-- END: for the end year-monthly range: start -->
+                                                        <!-- START: for the end year-quarterly range -->
+                                                        <span ng-show="PeriodRange.range=='PeriodRangeYearQuarterly'">
+                                                            <label>{{analytics['startQuarter']}}</label>
+                                                            <select class="form-control" name="StartPeriod" ng-model="PeriodSelect.StartYearStartQuarter">
+                                                                <option value="0"></option>
+                                                                <option value="1">{{analytics['quarter1']}}</option>
+                                                                <option value="2">{{analytics['quarter2']}}</option>
+                                                                <option value="3">{{analytics['quarter3']}}</option>
+                                                                <option value="4">{{analytics['quarter4']}}</option>
+                                                            </select>
+                                                            <label>{{analytics['endQuarter']}}</label>
+                                                            <select class="form-control" name="EndPeriod" ng-model="PeriodSelect.StartYearEndQuarter">
+                                                                <option value="0"></option>
+                                                                <option value="1">{{analytics['quarter1']}}</option>
+                                                                <option value="2">{{analytics['quarter2']}}</option>
+                                                                <option value="3">{{analytics['quarter3']}}</option>
+                                                                <option value="4">{{analytics['quarter4']}}</option>
+                                                            </select>
+                                                            <hr />
+                                                        </span>
+                                                        <!-- START: for the end year-quarterly range -->
+
+                                                        <span ng-show="(PeriodRange.range=='PeriodRangeYearQuarterly'||PeriodRange.range=='PeriodRangeYearMonthly'||PeriodRange.range=='PeriodRangeYearly')">
+                                                            <label>{{analytics['endFiscalYear']}}</label>
+                                                            <select class="form-control" ng-model="PeriodSelect.EndFiscalYear">
+                                                                <option value="0"></option>
+                                                                <option value="2020">2020</option>
+                                                                <option value="2019">2019</option>
+                                                                <option value="2018">2018</option>
+                                                                <option value="2017">2017</option>
+                                                                <option value="2016">2016</option>
+                                                                <option value="2015">2015</option>
+                                                                <option value="2014">2014</option>
+                                                                <option value="2013">2013</option>
+                                                                <option value="2012">2012</option>
+                                                                <option value="2011">2011</option>
+                                                                <option value="2010">2010</option>
+                                                                <option value="2009">2009</option>
+                                                                <option value="2008">2008</option>
+                                                                <option value="2007">2007</option>
+                                                                <option value="2006">2006</option>
+                                                                <option value="2005">2005</option>
+                                                                <option value="2004">2004</option>
+                                                                <option value="2003">2003</option>
+                                                                <option value="2002">2002</option>
+                                                                <option value="2001">2001</option>
+                                                                <option value="2000">2000</option>
+                                                            </select>
+                                                        </span>
+
+                                                        <!-- for the end year-monthly range: end -->
+                                                        <span ng-show="PeriodRange.range=='PeriodRangeYearMonthly'">
+                                                            <label>{{analytics['startMonth']}}</label>
+                                                            <select class="form-control" name="StartPeriod" ng-model="PeriodSelect.EndYearStartMonth">
+                                                                <option value="0"></option>
+                                                                <option value="1">{{analytics['hamle']}} (1)</option>
+                                                                <option value="2">{{analytics['nehase']}} (2)</option>
+                                                                <option value="3">{{analytics['meskerem']}} (3)</option>
+                                                                <option value="4">{{analytics['tikimt']}} (4)</option>
+                                                                <option value="5">{{analytics['hidar']}} (5)</option>
+                                                                <option value="6">{{analytics['tahisas']}} (6)</option>
+                                                                <option value="7">{{analytics['tir']}} (7)</option>
+                                                                <option value="8">{{analytics['yekatit']}} (8)</option>
+                                                                <option value="9">{{analytics['megabit']}} (9)</option>
+                                                                <option value="10">{{analytics['miyazia']}} (10)</option>
+                                                                <option value="11">{{analytics['ginbot']}} (11)</option>
+                                                                <option value="12">{{analytics['sene']}} (12)</option>
+                                                            </select>
+                                                            <label>{{analytics['endMonth']}}</label>
+                                                            <select class="form-control" name="EndPeriod" ng-model="PeriodSelect.EndYearEndMonth">
+                                                                <option value="0"></option>
+                                                                <option value="1">{{analytics['hamle']}} (1)</option>
+                                                                <option value="2">{{analytics['nehase']}} (2)</option>
+                                                                <option value="3">{{analytics['meskerem']}} (3)</option>
+                                                                <option value="4">{{analytics['tikimt']}} (4)</option>
+                                                                <option value="5">{{analytics['hidar']}} (5)</option>
+                                                                <option value="6">{{analytics['tahisas']}} (6)</option>
+                                                                <option value="7">{{analytics['tir']}} (7)</option>
+                                                                <option value="8">{{analytics['yekatit']}} (8)</option>
+                                                                <option value="9">{{analytics['megabit']}} (9)</option>
+                                                                <option value="10">{{analytics['miyazia']}} (10)</option>
+                                                                <option value="11">{{analytics['ginbot']}} (11)</option>
+                                                                <option value="12">{{analytics['sene']}} (12)</option>
+                                                            </select>
+                                                        </span>
+                                                        <!-- END: for the end year-monthly range: start -->
+                                                        <!-- END: for the end year-quarterly range -->
+                                                        <span ng-show="PeriodRange.range=='PeriodRangeYearQuarterly'">
+                                                            <label>{{analytics['startQuarter']}}</label>
+                                                            <select class="form-control" name="StartPeriod" ng-model="PeriodSelect.EndYearStartQuarter">
+                                                                <option value="0"></option>
+                                                                <option value="1">{{analytics['quarter1']}}</option>
+                                                                <option value="2">{{analytics['quarter2']}}</option>
+                                                                <option value="3">{{analytics['quarter3']}}</option>
+                                                                <option value="4">{{analytics['quarter4']}}</option>
+                                                            </select>
+                                                            <label>{{analytics['endQuarter']}}</label>
+                                                            <select class="form-control" name="EndPeriod" ng-model="PeriodSelect.EndYearEndQuarter">
+                                                                <option value="0"></option>
+                                                                <option value="1">{{analytics['quarter1']}}</option>
+                                                                <option value="2">{{analytics['quarter2']}}</option>
+                                                                <option value="3">{{analytics['quarter3']}}</option>
+                                                                <option value="4">{{analytics['quarter4']}}</option>
+                                                            </select>
+                                                        </span>
+                                                        <!-- END: for the end year-quarterly range -->
+
+                                                        <span ng-show="PeriodRange.range=='PeriodRangeMonthly'">
+                                                            <label>{{analytics['startMonth']}}</label>
+                                                            <select class="form-control" name="StartPeriod" ng-model="PeriodSelect.StartMonth">
+                                                                <option value="0"></option>
+                                                                <option value="1">{{analytics['hamle']}} (1)</option>
+                                                                <option value="2">{{analytics['nehase']}} (2)</option>
+                                                                <option value="3">{{analytics['meskerem']}} (3)</option>
+                                                                <option value="4">{{analytics['tikimt']}} (4)</option>
+                                                                <option value="5">{{analytics['hidar']}} (5)</option>
+                                                                <option value="6">{{analytics['tahisas']}} (6)</option>
+                                                                <option value="7">{{analytics['tir']}} (7)</option>
+                                                                <option value="8">{{analytics['yekatit']}} (8)</option>
+                                                                <option value="9">{{analytics['megabit']}} (9)</option>
+                                                                <option value="10">{{analytics['miyazia']}} (10)</option>
+                                                                <option value="11">{{analytics['ginbot']}} (11)</option>
+                                                                <option value="12">{{analytics['sene']}} (12)</option>
+                                                            </select>
+                                                            <label>{{analytics['endMonth']}}</label>
+                                                            <select class="form-control" name="EndPeriod" ng-model="PeriodSelect.EndMonth">
+                                                                <option value="0"></option>
+                                                                <option value="1">{{analytics['hamle']}} (1)</option>
+                                                                <option value="2">{{analytics['nehase']}} (2)</option>
+                                                                <option value="3">{{analytics['meskerem']}} (3)</option>
+                                                                <option value="4">{{analytics['tikimt']}} (4)</option>
+                                                                <option value="5">{{analytics['hidar']}} (5)</option>
+                                                                <option value="6">{{analytics['tahisas']}} (6)</option>
+                                                                <option value="7">{{analytics['tir']}} (7)</option>
+                                                                <option value="8">{{analytics['yekatit']}} (8)</option>
+                                                                <option value="9">{{analytics['megabit']}} (9)</option>
+                                                                <option value="10">{{analytics['miyazia']}} (10)</option>
+                                                                <option value="11">{{analytics['ginbot']}} (11)</option>
+                                                                <option value="12">{{analytics['sene']}} (12)</option>
+                                                            </select>
+                                                        </span>
+                                                        <span ng-show="PeriodRange.range=='PeriodRangeQuarterly'">
+                                                            <label>{{analytics['startQuarter']}}</label>
+                                                            <select class="form-control" name="StartPeriod" ng-model="PeriodSelect.StartQuarter">
+                                                                <option value="0"></option>
+                                                                <option value="1">{{analytics['quarter1']}}</option>
+                                                                <option value="2">{{analytics['quarter2']}}</option>
+                                                                <option value="3">{{analytics['quarter3']}}</option>
+                                                                <option value="4">{{analytics['quarter4']}}</option>
+                                                            </select>
+                                                            <label>{{analytics['endQuarter']}}</label>
+                                                            <select class="form-control" name="EndPeriod" ng-model="PeriodSelect.EndQuarter">
+                                                                <option value="0"></option>
+                                                                <option value="1">{{analytics['quarter1']}}</option>
+                                                                <option value="2">{{analytics['quarter2']}}</option>
+                                                                <option value="3">{{analytics['quarter3']}}</option>
+                                                                <option value="4">{{analytics['quarter4']}}</option>
+                                                            </select>
+                                                        </span>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-9 topTypeSelectionLeft" ng-show="configType=='ReportType'">
+                            <table width:"100%"
+                                   style="padding:0px" class="table table-hover table-responsive">
+                                <thead class="thead-default">
+                                    <tr>
+                                        <th>
+                                            <!--<h4 class="Analytics" style="text-align:center">Selected Data Elements</h4>-->
+                                            <button type="button" class="btn btn-primary btn-setLocation" ng-click="clearDataElements()">
+                                                {{analytics['clearAllSelections']}} &nbsp;&nbsp;
+                                            </button>
+                                            <button type="button" class="btn btn-primary btn-setLocation" ng-click="selectAllShownDataElements()">
+                                                {{analytics['selectAllShown']}} &nbsp;&nbsp;
+                                            </button>
+                                            <label>
+                                                {{analytics['search']}}:
+                                                <input ng-model="searchText"
+                                                       ng-model-options="{debounce: 250}"
+                                                       ng-minlength="2">
+                                            </label>
+                                            <label>
+                                                <br />
+                                                &nbsp;&nbsp;&nbsp;&nbsp;                                              
+                                            </label>
+                                            <!--<form ng-show="currentClicked.service">
+                                                <input type="radio" ng-model="serviceElements.type" value="new" checked
+                                                       ng-click="setServiceElementType()">
+                                                <span style="text-align:center; color:steelblue">
+                                                <b>{{analytics['newServiceDataElements']}} ({{analytics['efy']}} 2007 {{analytics['andAbove']}})</b></span>
+                                                &nbsp;&nbsp;&nbsp;
+                                                <input type="radio" ng-model="serviceElements.type" value="old"
+                                                       ng-click="setServiceElementType()">
+                                                <span style="text-align:center; color:steelblue">
+                                                <b>{{analytics['olderServiceDataElements']}} ({{analytics['efy']}} 2006 {{analytics['andBelow']}})</b></span>
+                                            </form>-->
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+
+                            <table width:"100%"
+                                   style="padding:0px" class="table table-hover table-responsive">
+                                <thead class="thead-default">
+                                    <tr ng-show="currentClicked.service">
+                                        <th>
+                                            <b>{{analytics['dataElementDescriptions']}}</b>
+                                        </th>
+                                        <th>
+                                            <b>{{analytics['category']}}</b>
+                                        </th>
+                                        <th>
+                                            <b>{{analytics['aggregationType']}}</b>
+                                        </th>
+                                    </tr>
+                                    <tr ng-show="currentClicked.disease">
+                                        <th>
+                                            <b>{{analytics['diseaseName']}}</b>
+                                        </th>
+                                        <th>
+                                            <b>{{analytics['customGroups']}}</b>
+                                        </th>
+                                    </tr>
+                                    <tr ng-show="currentClicked.indicator">
+                                        <th>
+                                            <b>{{analytics['indicatorName']}}</b>
+                                        </th>
+                                        <th>
+                                            <b>{{analytics['numeratorName']}}</b>
+                                        </th>
+                                        <th>
+                                            <b>{{analytics['denominatorName']}}</b>
+                                        </th>
+                                        <th>
+                                            <b>{{analytics['category']}}</b>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="dataElement in filteredData.filteredDataElementsArray =
+                                                 (dataElementsArray  | filter:searchText)"
+                                        ng-show="currentClicked.service">
+                                        <td>
+                                            <input type="checkbox" class="chkboxAnalytics"
+                                                   ng-model="dataElement.Checked"
+                                                   ng-checked="dataElement.Checked" />
+                                            <!--ng-click="setAggregationInfo($index, dataElement.Checked, dataElement.FullDescription)"/>-->
+                                            <b class="Analytics">{{dataElement.FullDescription}}</b>
+                                        </td>
+                                        <td>
+                                            <b class="Analytics">{{dataElement.Category1}}</b>
+                                        </td>
+                                        <td>
+                                            <b class="Analytics">{{dataElement.groupName}}</b>
+                                        </td>
+                                    </tr>
+
+                                    <tr ng-repeat="dataElement in filteredData.filteredDiseaseDataElementsArray =
+                                                     (diseaseDataElementsArray  | filter:searchText)"
+                                        ng-show="currentClicked.disease">
+                                        <td>
+                                            <input type="checkbox" class="chkboxAnalytics"
+                                                   ng-model="dataElement.Checked"
+                                                   ng-checked="dataElement.Checked " />
+                                            <b class="Analytics">{{dataElement.Disease}}</b>
+                                        </td>
+                                        <td>
+                                            <!--<b class="Analytics">{{dataElement.groupName}}</b>-->
+                                            <b class="Analytics">
+                                                <input type="text"
+                                                       ng-model="dataElement.groupName" value="{{dataElement.groupName}}" />
+                                            </b>
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat="dataElement in filteredData.filteredIndicatorsArray =
+                                                 (indicatorsArray  | filter:searchText)"
+                                        ng-show="currentClicked.indicator">
+                                        <td>
+                                            <input type="checkbox" class="chkboxAnalytics"
+                                                   ng-model="dataElement.Checked"
+                                                   ng-checked="dataElement.Checked " />
+                                            <b class="Analytics">{{dataElement.IndicatorName}}</b>
+                                        </td>
+                                        <td>
+                                            <b class="Analytics">{{dataElement.NumeratorName}}</b>
+                                        </td>
+                                        <td>
+                                            <b class="Analytics">{{dataElement.DenominatorName}}</b>
+                                        </td>
+                                        <td>
+                                            <b class="Analytics">{{dataElement.Category1}}</b>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-sm-9 topTypeSelectionLeft" ng-show="configType=='Institutions'">
+
+                            <div class="pnlChooseSiteCustomReport" style="width:100%">
+                                <input id="loc-parent" type="checkbox" data-facilityType="{{ temphierarchy[0].FacilityTypeId }}"  data-hmiscode="{{ temphierarchy[0].HMISCode }}" ng-model="checkedState[temphierarchy[0].HMISCode]"
+                                       ng-checked="checkedState[temphierarchy[0].HMISCode]"
+                                       ng-change="checkedStateChangedInstitution(temphierarchy[0].HMISCode)" class="btn-setLocation">
+                                <label for="loc-parent">
+                                    {{ temphierarchy[0].FacilityName }}
+                                    <!--{{ temphierarchy[0].HMISCode }}-->
+                                </label>
+                                <ul class="customReport customLevel0Report" style="padding-left:20px;">
+                                    <li ng-repeat="level0 in children0Custom">
+                                        <span ng-show="NoParentFacility[level0.ChildId]==1">
+                                            <img ng-click="getChildren(level0.ChildId, level0.FacilityType, 0)"
+                                                 src="img/plus.png" width="20" height="20"
+                                                 ng-show="(level0ExpandChildren[level0.ChildId] != true)">
+                                            <img ng-click="getChildren(level0.ChildId, level0.FacilityType, 0)"
+                                                 src="img/minus.png" width="20" height="20"
+                                                 ng-show="(level0ExpandChildren[level0.ChildId] == true)">
+                                        </span>
+                                        <span ng-show="NoParentFacility[level0.ChildId]!=1">
+                                            <img src="img/noChild.png" width="20" height="20" style="background-color:red;">
+                                        </span>
+                                        <input type="checkbox" data-facilitytype="{{ level0.FacilityType }}" data-hmiscode="{{ level0.ChildId }}" ng-model="checkedState[level0.ChildId]"
+                                               ng-checked="checkedState[level0.ChildId]"
+                                               ng-change="checkedStateChangedInstitution(level0.ChildId)">
+                                        <span ng-click="getChildren(level0.ChildId, level0.FacilityType, 0)">
+
+                                            <b>{{ level0.ChildName }} </b>
+                                        </span> <!-- The Region got Clicked..level 0 -->
+                                        <div ng-show="level0ExpandChildren[level0.ChildId]">
+                                            <ul class="customReport">
+                                                <li ng-repeat="level1 in children[level0.ChildId]">
+                                                    <span ng-show="NoParentFacility[level1.ChildId]==1">
+                                                        <img ng-click="getChildren(level1.ChildId, level1.FacilityType, 1)"
+                                                             src="img/plus.png" width="20" height="20"
+                                                             ng-show="(level1ExpandChildren[level1.ChildId] != true)">
+                                                        <img ng-click="getChildren(level1.ChildId, level1.FacilityType, 1)"
+                                                             src="img/minus.png" width="20" height="20"
+                                                             ng-show="(level1ExpandChildren[level1.ChildId] == true)">
+                                                    </span>
+                                                    <span ng-show="NoParentFacility[level1.ChildId]!=1">
+                                                        <img src="img/noChild.png" width="20" height="20" class="imgNoChild">
+                                                    </span>
+                                                    <input type="checkbox" data-facilitytype="{{ level1.FacilityType }}" data-hmiscode="{{ level1.ChildId }}" ng-model="checkedState[level1.ChildId]"
+                                                           ng-checked="checkedState[level1.ChildId]"
+                                                           ng-change="checkedStateChangedInstitution(level1.ChildId)">
+                                                    <span ng-click="getChildren(level1.ChildId, level1.FacilityType, 1)">
+                                                        <!-- Either The Zone or the Woreda get clicked -->
+                                                        <b> {{ level1.ChildName }} </b>
+                                                    </span> <!-- The Region got Clicked..level 0 -->
+                                                    <div ng-show="level1ExpandChildren[level1.ChildId]">
+                                                        <ul class="customReport">
+                                                            <li ng-repeat="level2 in children[level1.ChildId]">
+                                                                <span ng-show="NoParentFacility[level2.ChildId]==1">
+                                                                    <img ng-click="getChildren(level2.ChildId, level2.FacilityType, 2)"
+                                                                         src="img/plus.png" width="20" height="20"
+                                                                         ng-show="(level2ExpandChildren[level2.ChildId] != true)">
+                                                                    <img ng-click="getChildren(level2.ChildId, level2.FacilityType, 2)"
+                                                                         src="img/minus.png" width="20" height="20"
+                                                                         ng-show="(level2ExpandChildren[level2.ChildId] == true)">
+                                                                </span>
+                                                                <span ng-show="NoParentFacility[level2.ChildId]!=1">
+                                                                    <img src="img/noChild.png" width="20" height="20" class="imgNoChild">
+                                                                </span>
+                                                                <input type="checkbox"  data-facilitytype="{{ level2.FacilityType }}" data-hmiscode="{{ level2.ChildId }}"  ng-model="checkedState[level2.ChildId]"
+                                                                       ng-checked="checkedState[level2.ChildId]"
+                                                                       ng-change="checkedStateChangedInstitution(level2.ChildId)">
+                                                                <span ng-click="getChildren(level2.ChildId, level2.FacilityType, 2)" id="level2">
+                                                                    <!-- Woreda get clicked -->
+                                                                    <b> {{ level2.ChildName }}  </b>
+                                                                </span>
+                                                                <div ng-show="level2ExpandChildren[level2.ChildId]">
+                                                                    <ul class="customReport">
+                                                                        <li ng-repeat="level3 in children[level2.ChildId]">
+                                                                            <span ng-show="NoParentFacility[level3.ChildId]==1">
+                                                                                <img ng-click="getChildren(level3.ChildId, level3.FacilityType, 3)"
+                                                                                     src="img/plus.png" width="20" height="20"
+                                                                                     ng-show="(level3ExpandChildren[level3.ChildId] != true)">
+                                                                                <img ng-click="getChildren(level3.ChildId, level3.FacilityType, 3)"
+                                                                                     src="img/minus.png" width="20" height="20"
+                                                                                     ng-show="(level3ExpandChildren[level3.ChildId] == true)">
+                                                                            </span>
+                                                                            <span ng-show="NoParentFacility[level3.ChildId]!=1">
+                                                                                <img src="img/noChild.png" width="20" height="20" class="imgNoChild">
+                                                                            </span>
+                                                                            <input type="checkbox"  data-facilitytype="{{ level3.FacilityType }}" data-hmiscode="{{ level3.ChildId }}" ng-model="checkedState[level3.ChildId]"
+                                                                                   ng-checked="checkedState[level3.ChildId]"
+                                                                                   ng-change="checkedStateChangedInstitution(level3.ChildId)">
+                                                                            <span ng-click="getChildren(level3.ChildId, level3.FacilityType,3)" id="level3">
+                                                                                <b>  {{ level3.ChildName }}  </b>
+                                                                            </span>
+                                                                            <div ng-show="level3ExpandChildren[level3.ChildId]">
+                                                                                <ul class="customReport">
+                                                                                    <li ng-repeat="level4 in children[level3.ChildId]">
+                                                                                        <span ng-show="NoParentFacility[level4.ChildId]!=1">
+                                                                                            <img src="img/noChild.png" width="20" height="20" class="imgNoChild">
+                                                                                        </span>
+                                                                                        <input type="checkbox"  data-facilitytype="{{ level4.FacilityType }}" data-hmiscode="{{ level4.ChildId }}" ng-model="checkedState[level4.ChildId]"
+                                                                                               ng-checked="checkedState[level4.ChildId]"
+                                                                                               ng-change="checkedStateChangedInstitution(level4.ChildId)">
+                                                                                        <span ng-click="getChildren(level4.ChildId, level4.FacilityType,4)" id="level4">
+                                                                                            <b>  {{ level4.ChildName }}   </b>
+                                                                                        </span>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div ng-switch-when="showReports">
+                    <table width:"100%" style="padding:0px" class="progress table table-hover table-responsive" ng-show="progress.reportProgress">
+                        <thead class="thead-default">
+                            <tr>
+                                <th>
+                                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:100%; height:100px">
+                                        {{analytics['loadingReportsPleaseWait']}}.....
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <table id="reportTable" width:"100%"
+                           style="padding:0px" class="table table-hover table-responsive">
+                        <thead class="thead-default">
+                            <tr>
+                                <th>
+                                    <label>{{analytics['search']}}: <input ng-model="searchTextData.data"></label>
+                                    &nbsp;&nbsp;
+                                    <!--<button ng-click="drillAllDown('table')">Drill Down All <img src="img/downArrowSign.png" height="20" width="20" /></button>-->
+                                    <button ng-click="DrillUp()">{{analytics['drillUp']}} <img src="img/upArrowSign.png" height="20" width="20" /></button>
+                                </th>
+                                <th>
+                                    &nbsp;&nbsp;
+                                    <button onclick="selectAndCopyElement('selection')"><b>{{analytics['copyWithFormat']}}</b></button>
+                                    &nbsp;&nbsp;
+                                    <button ng-click="exportFile()"><b>{{analytics['export']}}</b></button>
+                                </th>
+                                <th>
+                                    <label>
+                                        <span style="font-size:10px"><b>{{analytics['show']}}</b></span>
+                                        <input type="text" style="width:30px; font-size: 10px"
+                                               ng-model="entriesToShow"
+                                               value="" /><span style="font-size:10px"><b>{{analytics['entries']}}</b></span>
+                                    </label>
+                                    <button type="button" class="btn btn-success btn-responsive btn-setLocation"
+                                            ng-click="refreshPage(entriesToShow)"
+                                            style="white-space: normal;">
+                                        {{analytics['refresh']}}
+                                    </button>
+                                </th>
+                                <th>
+                                    <p>
+                                        {{analytics['filteredDataIs']}}: {{filteredData.filteredCustomReportData.length}}
+                                        {{setFilteredData(filteredData.filteredCustomReportData)}}
+                                        <button type="button" class="btn btn-success btn-responsive btn-setLocation"
+                                                ng-click="saveFilteredData()"
+                                                style="white-space: normal; font-size: 75%">
+                                            {{analytics['temporarilySave']}} <br /> {{analytics['filteredData']}}
+                                        </button>
+                                        
+                                        <br/>
+
+                                        <button type="button" class="btn btn-warning btn-setLocation"
+                                                ng-click="triggerAdvancedFilters()"
+                                                style="margin-top:10px; font-size: 75%">
+                                            {{analytics['advancedFilters']}}
+                                        </button>
+                                        <button type="button" class="btn btn-warning"
+                                                ng-click="resetAdvancedFilters()"
+                                                style="margin-top:10px; font-size: 75%">
+                                            {{analytics['resetAdvancedFilters']}}
+                                        </button>
+
+                                    </p>
+                                </th>
+                                <th>
+                                    <dir-pagination-controls max-size="100"
+                                                             direction-links="true"
+                                                             boundary-links="true"
+                                                             style="padding:0px; margin-top: 0px;
+                                                    margin-bottom: 0px; white-space: normal; ">
+                                    </dir-pagination-controls>
+                                    <!--<input type="checkbox" name="showall"
+                                           ng-model="showall" ng-checked="showall"
+                                           ng-click="checkShowAll(showall)">Remove Row Filter-->
+                                    <button type="button" class="btn btn-success btn-responsive btn-setLocation"
+                                            ng-click="checkShowAll()"
+                                            style="white-space: normal; font-size: 75%">
+                                        {{analytics['removeRow']}}<br />{{analytics['filter']}}
+                                    </button>
+                                    <button type="button" class="btn btn-success btn-responsive btn-setLocation"
+                                            ng-click="showAllPages()"
+                                            style="white-space: normal; font-size: 75%">
+                                        {{analytics['showAll']}}<br />{{analytics['pages']}}
+                                    </button>
+                                    <!--<button type="button" class="btn btn-success btn-responsive btn-setLocation"
+                                            ng-click="showAllPages()"
+                                            style="white-space: normal; font-size: 75%">
+                                        Show All<br /> Pages
+                                    </button>-->
+                                    <span ng-show="showall" style="color:red">{{analytics['warningThisMayTakeALongTime']}}</span>
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="row row-eq-height">
+                        <div class="col-sm-12 analyticsPanelSelection">
+                            <div id="selection">
+                                <table id="reportTable" width:"100%"
+                                       style="padding:0px" class="table table-hover table-responsive">
+                                    <thead class="thead-default">
+                                        <tr>
+                                            <th class="info" style="height:50px">
+                                                {{analytics['index']}}
+                                            </th>
+                                            <th ng-repeat="columnName in customReportColumnsLanguage" class="info"
+                                                style="height:50px"
+                                                ng-click="sort(columnName)">
+                                                {{columnName}}
+                                                <span class="glyphicon sort-icon" ng-show="sortKey==columnName"
+                                                      ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!--<tr ng-repeat="row in customReportData |orderBy:sortKey:reverse|filter:searchTextData"
+                                        end-of-progress-directive
+                                        ng-click="showRow(row)">-->
+                                        <tr dir-paginate="row in filteredData.filteredCustomReportData =
+                                         (customReportData|orderBy:sortKey:reverse|filter:searchTextData.data|limitTo:limitedData)
+                                         |itemsPerPage:showItemsPerPage"
+                                            end-of-progress-directive
+                                            ng-dblclick="showRow(row)">
+                                            <td>
+                                                {{$index + 1}}
+                                            </td>
+                                            <td ng-repeat="columnName in customReportColumns">
+                                                {{row[columnName]}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div ng-switch-when="showCharts" render-analytics-directive>
+                    <div class="row row-eq-height">
+                        <div class="col-sm-12 topTypeSelectionLeft">
+                            <div class="analytics-panel" id="analytics-panel"></div>
+                        </div>
+                    </div>
+                </div>-->
+                <div ng-switch-when="showCharts">
+                    <div class="row">
+                        <div class="col-sm-5 topTypeSelection">
+                            <b>{{analytics['chooseXAxis']}}</b>
+                            <span style="color:lightseagreen; font-size:large">
+                                <select ng-model="selectedAxis.xAxis" ng-options="x for x in drillDownReportColumns"></select>
+                            </span>
+                            <b>{{analytics['chooseYAxis']}}</b>
+                            <span style="color:lightseagreen; font-size:large">
+                                <select ng-model="selectedAxis.yAxis" ng-options="x for x in drillDownReportColumns"></select>
+                            </span>
+                            <b>{{analytics['aggregationType']}}</b>
+                            <select ng-model="selectedAxis.AggregationType">
+                                <option value="none" selected>{{analytics['none']}}</option>
+                                <option value="sum">{{analytics['sum']}}</option>
+                                <!--<option value="avg">Avg</option>
+                                <option value="max">Max</option>
+                                <option value="min">Min</option>-->
+                            </select>
+                            <b> Chart Type </b>
+                            <select ng-model="selectedAxis.ChartType" ng-change="setChartType(false)">
+                                <option value="Bar_Chart" selected>{{analytics['barChart']}}</option>
+                                <option value="Pie_Chart">{{analytics['pieChart']}}</option>
+                                <option value="Donut_Chart">{{analytics['donutChart']}}</option>
+                                <option value="Line_Chart">{{analytics['lineChart']}}</option>
+                                <option value="MultiBar_Chart">{{analytics['multiBarChart']}}</option>
+                                <option value="MultiBarHorizontal_Chart">{{analytics['multiBarHorizontalChart']}}</option>
+                            </select>
+                            <span ng-if="(selectedAxis.ChartType=='MultiBar_Chart')||((selectedAxis.ChartType=='MultiBarHorizontal_Chart'))">
+                                <b> {{analytics['groupBy']}} </b>
+                                <span style="color:lightseagreen; font-size:large">
+                                    <select ng-model="selectedAxis.groupBy" ng-options="x for x in drillDownReportColumns" ng-change="groupByMultiChart(false)"></select>
+                                </span>
+                            </span>
+                        </div>
+                        <!--</div>-->
+                        <!--<div class="row row-eq-height">-->
+                        <div class="col-sm-6">
+                            <button ng-click="setChartData()">{{analytics['clickHereToShowChart']}}</button>
+                            <button ng-click="removeChartData()">{{analytics['clickHereToRemoveChart']}}</button>
+                            &nbsp;&nbsp;
+                            <!--<button ng-click="drillAllDown('chart')" >Drill Down All <img src="img/downArrowSign.png" height="20" width="20"/></button>-->
+                            <button ng-click="DrillUp()">{{analytics['drillUp']}} <img src="img/upArrowSign.png" height="20" width="20" /></button>
+                            <label>{{analytics['chartName']}}: <input ng-model="chartName.Name"></label>
+                            &nbsp;&nbsp;
+                            <button ng-click="saveToDashBoard()">
+                                {{analytics['saveToDashBoard']}}
+                            </button>
+                            <button ng-click="exportAsImage()">{{analytics['exportAsImage']}}</button>
+                        </div>
+                    </div>
+                    <table width:"100%" style="padding:0px" class="progress table table-hover table-responsive" ng-if="!finishDrillDown">
+                        <thead class="thead-default">
+                            <tr>
+                                <th>
+                                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:100%; height:100px">
+                                        {{analytics['loadingReportsPleaseWait']}}.....
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="row row-eq-height" ng-if="finishDrillDown">
+                        <div class="col-sm-12 topTypeSelectionLeft">
+                            <nvd3 id="nvd3_container" options="chartOptions2" data="chartData2" config="config"
+                                  events="events" api="api">
+                            </nvd3>
+                            <canvas id="svg_to_canvas" width="100px" height="100px" style="display:none"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

@@ -1,0 +1,158 @@
+﻿<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<body ng-app="eHMISApp" ng-controller="uploadCtrl">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <!--<h2 class="panel-title">Import Files</h2><br />-->
+            <div class="row">
+                <div class="radio" style="padding-left:5em; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size:17px">
+                    <label><input type="radio" name="optradio" value="import" class="radio" ng-model="display">Import HMIS Data</label>
+                </div>
+                <div class="radio" style="padding-left:5em; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size:17px">
+                    <label><input type="radio" name="optradio" value="importExcel" class="radio" ng-model="display">Import HMIS Data from Excel</label>
+                </div>
+                <div class="radio" style="padding-left:5em; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;font-size:17px">
+                    <label><input type="radio" name="optradio" value="view" ng-model="display" ng-click="getImportedFile()">View Imported Files</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-show="display=='import'" class="container-fluid" style="border:groove 2px; border-color:ActiveBorder">
+        <div class="panel-body">
+            <div class="row">
+                <div>
+                    <label for="file" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:GrayText">
+                        Choose a file to import <br /><br />
+                    </label>
+
+                    <input type="file" file-model="zipFile" style="width:700px" />
+                </div><br /><br />
+                <!--<div ng-show="showProgress">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:500px">
+                        Uploading and Importing Reports Please Wait.....
+                    </div>
+                </div>--> 
+                <div class="loading-dialog" data-loading="">
+                </div>
+                <div>
+                    <button type="button" class="btn btn-success" id="save_facility" ng-click="uploadFile()">
+                        <i class="glyphicon glyphicon-upload"></i> Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-show="display=='importExcel'" class="container-fluid" style="border:groove 2px; border-color:ActiveBorder">
+        <div class="panel-body">
+            <div class="row">
+                <div>
+                    <label for="file" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:GrayText">
+                        Choose a file to import <br /><br />
+                    </label>
+
+                    <input type="file" file-model="zipFile" style="width:700px" />
+                </div><br /><br />
+                <!--<div>
+                    <label for="number" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:GrayText"> Report Year:</label><br/>
+                    <input type="number" ng-model="selectedYear" /> 
+                </div><br /><br />-->
+                <!--<div ng-show="showProgress">
+                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:500px">
+                        Uploading and Importing Reports Please Wait.....
+                    </div>
+                </div>--> 
+                <div class="loading-dialog" data-loading="">
+                </div>
+                <div>
+                    <button type="button" class="btn btn-success" id="save_facility" ng-click="uploadFile()">
+                        <i class="glyphicon glyphicon-upload"></i> Submit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8" ng-if="!showReport">
+    </div>
+    <div ng-show="display=='view'" ng-if="showReport">
+        <div class="panel panel-default pnlServiceEntry">
+            <div class="panel-body">
+                <div class="loading-dialog" data-loading="">
+                </div>
+                <!--<div class="panel panel-default">-->
+                <!--<div id="selection" class="panel-body tab-pane">-->
+                <!--<table width:"100%" style="padding:0px" class="progress table table-hover table-responsive">
+                    <thead class="thead-default">
+                        <tr>
+                            <th>
+                                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:100%; height:100px">
+                                    Loading Reports Please Wait.....
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>-->
+                <table id="reportTable" class="table table-condensed table-responsive" style="background-color:white; padding:0px" width:"100%">
+                    <thead>
+                        <tr>
+                            <th colspan="14" style="background-color:#4E6868; color:#DFEDED">
+                                Imported Files
+                                <input type="text" style="float:right; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:black" ng-model="searchKeyword" />
+                                <label style="float:right">Search:&nbsp;&nbsp;   </label>
+                            </th>
+
+                        </tr>
+                        <tr style="background-color:#4E6868; color:#DFEDED">
+                            <th> User</th>
+                            <th> File Name</th>
+                            <th> Date</th>
+                            <th> File Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="importedFile in importedFiles | filter:searchKeyword" end-of-repeat-directive>
+                            <td>
+                                <div> {{importedFile.User}} </div>
+                            </td>
+                            <td>
+                                <div> {{importedFile.FileName}}</div>
+                            </td>
+                            <td>
+                                <div> {{importedFile.Date | date : 'yyyy-MM-dd HH:mm:ss'}}</div>
+                            </td>
+                            <td>
+                                <div> {{importedFile.FileSize}}</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            </div>      
+        </div>
+</body>
+
+

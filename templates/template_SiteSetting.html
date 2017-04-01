@@ -1,0 +1,113 @@
+<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+
+<body>
+
+<!-- Write your comments here -->
+<div ng-app="eHMISApp" ng-controller="locationCtrl" id="grad1">
+<div class="container settingsContainer">
+
+<button type="button" class="btn btn-success" ng-click="saveMainLocationId(mainLocationIdToSet)"> Set Location: {{ selectedFacilityName }} </button>
+
+<!-- <div class="panel panel-info pnlSiteSetting">
+<div class="panel-body tab-pane"> -->	
+
+	<ul>
+		<li> <button type="button" class="btn btn-primary"> <img src="img/fmoh.png" class="img-responsive" width="50" height="50"> <h5>Federal Ministry of Health </h5>  </button> 
+	<ul> 
+		<li ng-repeat= "regions in regionLevel"> 
+			<span ng-click="getChildren(regions.ChildId, regions.FacilityType, 0, regions.ChildName)"> 				
+				<img src="img/{{regions.ChildId}}.jpg" width="20" height="20"> 				
+				<button type="button" class="btn btn-primary" id = "level0"> 
+					{{ regions.ChildName }} 
+				</button>
+			</span> <!-- The Region got Clicked..level 0 -->
+			<div ng-show="level0Expand">			
+			<ul> 			
+					<div ng-if="clickedId1 == regions.ChildId">	
+						<li ng-repeat = "level1 in children1"> 												
+								<span ng-click="getChildren(level1.ChildId, level1.FacilityType, 1, level1.ChildName)"> <!-- Either The Zone or the Woreda get clicked -->																						
+									<button type="button" class="btn btn-primary" id = "level1" > 
+										{{ level1.ChildName }} 
+									</button>
+								</span> <!-- The Region got Clicked..level 0 -->
+								<div ng-show="level1Expand">	
+									<ul> 			
+										 <div ng-if="clickedId2 == level1.ChildId">
+											<li ng-repeat = "level2 in children2"> 												
+													<span ng-click="getChildren(level2.ChildId, level2.FacilityType, 2, level2.ChildName)" id = "level2">  <!-- Woreda get clicked -->
+														<button type="button" class="btn btn-primary" id = "level2"> 
+															{{ level2.ChildName }} 
+														</button>
+													</span>	
+														<ul> 			
+															 <div ng-if="clickedId3 == level2.ChildId">
+																<li ng-repeat = "level3 in children3"> 												
+																		<span ng-click="getChildren(level3.ChildId, level3.FacilityType,3, level3.ChildName)" id="level3"> 
+																			<button type="button" class="btn btn-primary" id = "level3"> 
+																				{{ level3.ChildName }} 
+																			</button>	
+																		</span>	
+																			<ul> 			
+																				<div ng-if="clickedId4 == level3.ChildId">
+																					<li ng-repeat = "level4 in children4"> 												
+																							<span ng-click="getChildren(level4.ChildId, level4.FacilityType,4, level4.ChildName)" id="level4"> 
+																								<button type="button" class="btn btn-primary" id = "level4"> 
+																									{{ level4.ChildName }} 
+																								</button>	
+																							</span>	
+																					
+																					</li>	
+																				</div>																								
+																			</ul>
+																</li>	
+															</div>																								
+														</ul>
+											</li>	
+										</div>																								
+								    </ul>
+								</div>
+						</li>	
+					</div>																	
+			</ul>
+			</div>
+		</li>
+	</ul>
+	</li>
+	</ul>
+	
+<!-- </div>
+</div>	 -->
+</div>
+</div>
+</body>
+</html>
+

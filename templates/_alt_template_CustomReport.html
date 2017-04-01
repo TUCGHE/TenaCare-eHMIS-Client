@@ -1,0 +1,286 @@
+<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+
+<body>
+
+    <!-- Write your comments here -->
+    <div ng-app="eHMISApp" ng-controller="locationCtrl" id="grad1">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12 topSiteSelectionCustomReport">
+                    <!--<button type="button" class="btn btn-primary btn-setLocation"> Location: {{ hierarchy[0].FacilityName }} </button>-->
+
+                    <h4>
+                        <input type="checkbox" ng-model="checkedState[hierarchy[0].HMISCode]"
+                               ng-checked="checkedState[hierarchy[0].HMISCode]"
+                               ng-change="checkedStateChanged(hierarchy[0].HMISCode)" class="btn-setLocation">
+                        <b>{{ hierarchy[0].FacilityName }}  {{ hierarchy[0].HMISCode }}</b>
+                        <!--<button type="button" class="btn btn-primary btn-setLocation"> Location: {{ hierarchy[0].FacilityName }} </button>-->
+                        <button class="btn btn-primary navspecial" ng-click="customReportRequested_alt()"><b>Show Report</b></button>
+                    </h4>
+
+                </div>
+            </div>
+
+
+            <!--<div class="panel panel-info pnlcustomReport">
+                <div class="panel-body left-align">-->
+            <div class="container-flu
+            <div class="container-fluid" style="padding:0px;">
+                <div class="row" style="padding:0px;">
+                    <div class="col-sm-3 pnlcustomReport">
+                        <div class="pnlChooseSiteCustomReport">
+                            <ul class="customReport customLevel0Report">
+                                <li ng-repeat="level0 in children0">
+                                    <span ng-show="NoParentFacility[level0.ChildId]!=1">
+                                        <img ng-click="getChildren(level0.ChildId, level0.FacilityType, 0)"
+                                             src="img/plus.png" width="20" height="20"
+                                             ng-show="(level0ExpandChildren[level0.ChildId] != true)">
+                                        <img ng-click="getChildren(level0.ChildId, level0.FacilityType, 0)"
+                                             src="img/minus.png" width="20" height="20"
+                                             ng-show="(level0ExpandChildren[level0.ChildId] == true)">
+                                    </span>
+                                    <span ng-show="NoParentFacility[level0.ChildId]==1">
+                                        <img src="img/noChild.png" width="20" height="20" style="background-color:red;">
+                                    </span>
+                                    <!--<input type="checkbox" name="level0.ChildId" value="level0.ChildId">-->
+                                    <input type="checkbox" ng-model="checkedState[level0.ChildId]"
+                                           ng-checked="checkedState[level0.ChildId]"
+                                           ng-change="checkedStateChanged(level0.ChildId)">
+                                    <span ng-click="getChildren(level0.ChildId, level0.FacilityType, 0)">
+
+                                        <b>{{ level0.ChildName }} </b>
+                                    </span> <!-- The Region got Clicked..level 0 -->
+                                    <div ng-show="level0ExpandChildren[level0.ChildId]">
+                                        <ul class="customReport">
+                                            <!--<div ng-if="clickedId1 == level0.ChildId">-->
+                                            <!--<li ng-repeat="level1 in children1">-->
+                                            <li ng-repeat="level1 in children[level0.ChildId]">
+                                                <span ng-show="NoParentFacility[level1.ChildId]!=1">
+                                                    <img ng-click="getChildren(level1.ChildId, level1.FacilityType, 1)"
+                                                         src="img/plus.png" width="20" height="20"
+                                                         ng-show="(level1ExpandChildren[level1.ChildId] != true)">
+                                                    <img ng-click="getChildren(level1.ChildId, level1.FacilityType, 1)"
+                                                         src="img/minus.png" width="20" height="20"
+                                                         ng-show="(level1ExpandChildren[level1.ChildId] == true)">
+                                                </span>
+                                                <span ng-show="NoParentFacility[level1.ChildId]==1">
+                                                    <img src="img/noChild.png" width="20" height="20" class="imgNoChild">
+                                                </span>
+                                                <!--<input type="checkbox" name="level1.ChildId" value="level1.ChildId">-->
+                                                <input type="checkbox" ng-model="checkedState[level1.ChildId]"
+                                                       ng-checked="checkedState[level1.ChildId]"
+                                                       ng-change="checkedStateChanged(level1.ChildId)">
+                                                <span ng-click="getChildren(level1.ChildId, level1.FacilityType, 1)">
+                                                    <!-- Either The Zone or the Woreda get clicked -->
+                                                    <b> {{ level1.ChildName }} </b>
+                                                </span> <!-- The Region got Clicked..level 0 -->
+                                                <div ng-show="level1ExpandChildren[level1.ChildId]">
+                                                    <ul class="customReport">
+                                                        <!--<div ng-if="clickedId2 == level1.ChildId">-->
+                                                        <!--<li ng-repeat="level2 in children2">-->
+                                                        <li ng-repeat="level2 in children[level1.ChildId]">
+                                                            <span ng-show="NoParentFacility[level2.ChildId]!=1">
+                                                                <img ng-click="getChildren(level2.ChildId, level2.FacilityType, 2)"
+                                                                     src="img/plus.png" width="20" height="20"
+                                                                     ng-show="(level2ExpandChildren[level2.ChildId] != true)">
+                                                                <img ng-click="getChildren(level2.ChildId, level2.FacilityType, 2)"
+                                                                     src="img/minus.png" width="20" height="20"
+                                                                     ng-show="(level2ExpandChildren[level2.ChildId] == true)">
+                                                            </span>
+                                                            <span ng-show="NoParentFacility[level2.ChildId]==1">
+                                                                <img src="img/noChild.png" width="20" height="20" class="imgNoChild">
+                                                            </span>
+                                                            <!--<input type="checkbox" name="level2.ChildId" value="level2.ChildId">-->
+                                                            <input type="checkbox" ng-model="checkedState[level2.ChildId]"
+                                                                   ng-checked="checkedState[level2.ChildId]"
+                                                                   ng-change="checkedStateChanged(level2.ChildId)">
+                                                            <span ng-click="getChildren(level2.ChildId, level2.FacilityType, 2)" id="level2">
+                                                                <!-- Woreda get clicked -->
+                                                                <b> {{ level2.ChildName }}  </b>
+                                                            </span>
+                                                            <div ng-show="level2ExpandChildren[level2.ChildId]">
+                                                                <ul class="customReport">
+                                                                    <!--<div ng-if="clickedId3 == level2.ChildId">-->
+                                                                    <!--<li ng-repeat="level3 in children3">-->
+                                                                    <li ng-repeat="level3 in children[level2.ChildId]">
+                                                                        <span ng-show="NoParentFacility[level3.ChildId]!=1">
+                                                                            <img ng-click="getChildren(level3.ChildId, level3.FacilityType, 3)"
+                                                                                 src="img/plus.png" width="20" height="20"
+                                                                                 ng-show="(level3ExpandChildren[level3.ChildId] != true)">
+                                                                            <img ng-click="getChildren(level3.ChildId, level3.FacilityType, 3)"
+                                                                                 src="img/minus.png" width="20" height="20"
+                                                                                 ng-show="(level3ExpandChildren[level3.ChildId] == true)">
+                                                                        </span>
+                                                                        <span ng-show="NoParentFacility[level3.ChildId]==1">
+                                                                            <img src="img/noChild.png" width="20" height="20" class="imgNoChild">
+                                                                        </span>
+                                                                        <!--<input type="checkbox" name="level3.ChildId" value="level3.ChildId">-->
+                                                                        <input type="checkbox" ng-model="checkedState[level3.ChildId]"
+                                                                               ng-checked="checkedState[level3.ChildId]"
+                                                                               ng-change="checkedStateChanged(level3.ChildId)">
+                                                                        <span ng-click="getChildren(level3.ChildId, level3.FacilityType,3)" id="level3">
+                                                                            <b>  {{ level3.ChildName }}  </b>
+                                                                        </span>
+                                                                        <div ng-show="level3ExpandChildren[level3.ChildId]">
+                                                                            <ul class="customReport">
+                                                                                <!--<div ng-if="clickedId4 == level3.ChildId">-->
+                                                                                <!--<li ng-repeat="level4 in children4">-->
+                                                                                <li ng-repeat="level4 in children[level3.ChildId]">
+                                                                                    <span ng-show="NoParentFacility[level4.ChildId]==1">
+                                                                                        <img src="img/noChild.png" width="20" height="20" class="imgNoChild">
+                                                                                    </span>
+                                                                                    <!--<input type="checkbox" name="level4.ChildId" value="level4.ChildId">-->
+                                                                                    <input type="checkbox" ng-model="checkedState[level4.ChildId]"
+                                                                                           ng-checked="checkedState[level4.ChildId]"
+                                                                                           ng-change="checkedStateChanged(level4.ChildId)">
+                                                                                    <span ng-click="getChildren(level4.ChildId, level4.FacilityType,4)" id="level4">
+                                                                                        <b>  {{ level4.ChildName }}   </b>
+                                                                                    </span>
+                                                                                </li>
+                                                                                <!--</div>-->
+                                                                            </ul>
+                                                                        </div>
+                                                                    </li>
+                                                                    <!--</div>-->
+                                                                </ul>
+                                                            </div>
+                                                        </li>
+                                                        <!--</div>-->
+                                                    </ul>
+                                                </div>
+                                            </li>
+                                            <!-- </div> -->
+                                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-3 ">
+                                <div class="periodSelectionCustomReport">
+                                    <div class="container-fluid">
+                                        <form role="form">
+                                            <div class="form-group">
+                                                <label for="sel1">Period</label>
+                                                <select class="form-control" id="sel1" name="Period" ng-model="Period">
+                                                    <option selected="selected" value="Monthly">Monthly</option>
+                                                    <option value="Quarterly">Quarterly</option>
+                                                    <option value="Yearly">Yearly</option>
+                                                </select>
+                                                <label for="sel2">Report Type</label>
+                                                <select class="form-control" id="sel2" name="ReportType" ng-model="ReportType">
+                                                    <option selected="selected" value="Service">Service</option>
+                                                    <option value="OPD Disease">OPD Disease</option>
+                                                    <option value="IPD Disease">IPD Disease</option>
+                                                    <option value="Indicators">Indicators</option>
+                                                </select>
+                                                <label for="sel3">Fiscal Year</label>
+                                                <select class="form-control" ng-model="FiscalYear">
+                                                    <option value="2010">2010</option>
+                                                    <option value="2009">2009</option>
+                                                    <option selected="selected" value="2008">2008</option>
+                                                    <option value="2007">2007</option>
+                                                    <option value="2006">2006</option>
+                                                    <option value="2005">2005</option>
+                                                    <option value="2004">2004</option>
+                                                    <option value="2003">2003</option>
+                                                    <option value="2002">2002</option>
+                                                    <option value="2001">2001</option>
+                                                    <option value="2000">2000</option>
+                                                </select>
+                                                <label for="sel4">Start Month</label>
+                                                <select class="form-control" name="StartPeriod" ng-model="StartPeriod">
+                                                    <option selected="selected" value="1">Meskerem</option>
+                                                    <option value="2">Tikimt</option>
+                                                    <option value="3">Hidar</option>
+                                                    <option value="4">Tahisas</option>
+                                                    <option value="5">Tir</option>
+                                                    <option value="6">Yekatit</option>
+                                                    <option value="7">Megabit</option>
+                                                    <option value="8">Miyaziya</option>
+                                                    <option value="9">Ginbot</option>
+                                                    <option value="10">sene</option>
+                                                    <option value="11">Hamle</option>
+                                                    <option value="12">nehase</option>
+                                                </select>
+                                                <label for="sel5">End Month</label>
+                                                <select class="form-control" name="EndPeriod" ng-model="EndPeriod">
+                                                    <option selected="selected" value="1">Meskerem</option>
+                                                    <option value="2">Tikimt</option>
+                                                    <option value="3">Hidar</option>
+                                                    <option value="4">Tahisas</option>
+                                                    <option value="5">Tir</option>
+                                                    <option value="6">Yekatit</option>
+                                                    <option value="7">Megabit</option>
+                                                    <option value="8">Miyaziya</option>
+                                                    <option value="9">Ginbot</option>
+                                                    <option value="10">sene</option>
+                                                    <option value="11">Hamle</option>
+                                                    <option value="12">nehase</option>
+                                                </select>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-8" ng-show="showReport" style="padding:0px;">
+                        <!--The main grid goes here, first construct the table headers or columns then -->
+                        <div class="container-fluid" style="padding:0px;">
+                            <div class="panel panel-info" style="padding:0px; width: 1100px; height: 600px">
+                                <div class="panel-body tab-pane" style="padding:0px; width: 1100px; height: 600px">
+                                    <table width:"100%" style="padding:0px" class="progress table table-hover table-responsive">
+                                        <thead class="thead-default">
+                                            <tr>
+                                                <th>
+                                                    <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:100%; height:100px">
+                                                        Loading Reports Please Wait.....
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                    <div id="reportContainer"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
+

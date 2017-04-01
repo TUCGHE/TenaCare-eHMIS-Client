@@ -1,0 +1,411 @@
+﻿<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Tenacare eHMIS</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <link rel="stylesheet" type="text/css" href="js/libs/angular-ui-grid/ui-grid.min.css" />
+    <link rel="stylesheet" type="text/css" href="js/libs/fontawesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="js/libs/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css" />
+    <link rel="stylesheet" href="css/vendor/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="css/vendor/buttons.dataTables.min.css" />
+    <link href="css/bootstrap-timepicker.min.css" rel="stylesheet" />
+    <link href="css/nv.d3.min.css" rel="stylesheet" />
+    <link href="js/vendor/The-Meliorator/src/css/meliorator.css" rel="stylesheet" />
+    <link rel="stylesheet" href="js/libs/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/eHMISMain.css" />
+    <link href="js/libs/leaflet/leaflet.css" rel="stylesheet" />
+
+    <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+    <link href="js/libs/ivh-treeview/ivh-treeview.min.css" rel="stylesheet" />
+    <link href="js/libs/angular-loading-bar/build/loading-bar.min.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="container" ng-app="eHMISApp" ng-controller="SiteSettingCtrl" id="grad1" ng-cloak>
+        <div class="panel panel-info" style="background-color:white">
+            <div class="panel-body">
+                <div class="panel panel-info panelTopDashBoard" style="margin: 0;" ng-show="true">
+                    <div class="panel-body" style="color: white" ng-click="sethierarchy()">
+                        <div class="row" style="margin: 0;">
+                            <div class="col-md-12 col-lg-12"
+                                 style="padding:0px; background-color: chocolate">
+                                <span>
+                                    <button style="font-size: 8px; background-color: {{mainButtonColor.english}}; color:black;"
+                                            class="buttonLanguage buttonLanguage2" ng-click="setLanguage('english')">
+                                        English
+                                    </button>
+                                    <button style="font-size: 8px; background-color: {{mainButtonColor.amharic}}; color:black;"
+                                            class="buttonLanguage buttonLanguage2" ng-click="setLanguage('amharic')">
+                                        አማርኛ
+                                    </button>
+                                    <button style="font-size: 8px; background-color: {{mainButtonColor.french}}; color:black;"
+                                            class="buttonLanguage buttonLanguage2" ng-click="setLanguage('french')">
+                                        français
+                                    </button>
+                                    <button style="font-size: 8px; background-color: {{mainButtonColor.spanish}}; color:black;"
+                                            class="buttonLanguage buttonLanguage2" ng-click="setLanguage('spanish')">
+                                        Español
+                                    </button>
+                                    <button style="font-size: 8px; background-color: {{mainButtonColor.portuguese}}; color:black;"
+                                            class="buttonLanguage buttonLanguage2" ng-click="setLanguage('portuguese')">
+                                        Português
+                                    </button>
+                                    <button style="font-size: 8px; background-color: {{mainButtonColor.arabic}}; color:black;"
+                                            class="buttonLanguage buttonLanguage2" ng-click="setLanguage('arabic')">
+                                        عربى
+                                    </button>
+                                </span>
+                                <img src="images/top.jpg" class="img-responsive" />
+                            </div>
+                        </div>
+                        <div class="row row-eq-height" style="margin: 0;">
+                            <div class="col-md-4 col-lg-4 topDashBoard3" style="padding:0px">
+                                <img src="images/headerSmall.jpg" class="img-responsive" />
+                            </div>
+                            <div class="col-md-2 col-lg-2 topDashBoard3" style="padding:0px">
+                                <div class="header-text">{{dashboardLanguages['user']}}: <label class="header-value">{{ USER.FullName }}</label></div>
+                                <div class="header-text">{{dashboardLanguages['date']}}: <label class="header-value">{{ currentDate }}</label></div>
+                                <div class="header-text">{{dashboardLanguages['language']}}: <label class="header-value">{{dashboardLanguages[languageSet]}}</label></div>
+                            </div>
+                            <div class="col-md-3 col-lg-3 topDashBoard2" style="padding:0px">
+                                {{sethierarchy()}}
+                                <div class="header-text">{{dashboardLanguages['mainLocation']}}: <label class="header-value">{{ hierarchy[0].FacilityName }}</label></div>
+                                <div class="header-text">{{dashboardLanguages['workingLocation']}}: <label class="header-value">{{ temphierarchy[0].FacilityName }}</label></div>
+                                <div class="header-text">{{dashboardLanguages['dataentryMode']}}: <label class="header-value">{{ temphierarchy[0].FacilityTypeName }}</label></div>
+                            </div>
+
+                            <div class="col-md-2 col-lg-2 topDashBoard3" style="padding:0px">
+                                <span class="topDashBoard4Text">{{dashboardLanguages['national']}}</span>
+                                <div class="topDashBoard4Text" ng-if="temphierarchy[0].FacilityTypeId != 11" style="padding-left:10px;">
+                                    - {{ temphierarchy[0].ReportingRegionName }}
+                                </div>
+                                <div class="topDashBoard4Text" ng-if="temphierarchy[0].ZoneId != 0" style="padding-left:20px;">
+                                    - {{ temphierarchy[0].ZoneName }}
+                                </div>
+                                <div class="topDashBoard4Text" ng-if="temphierarchy[0].WoredaId != 0" style="padding-left:30px;">
+                                    - {{ temphierarchy[0].WoredaName }}
+                                </div>
+                                <div class="topDashBoard4Text" ng-if="temphierarchy[0].HealthCenterID != 0" style="padding-left:40px;">
+                                    - {{ temphierarchy[0].HealthCenterName }}
+                                </div>
+                                <div class="topDashBoard4Text" ng-if="(temphierarchy[0].FacilityTypeId <=7)|| (temphierarchy[0].FacilityTypeId>11)" style="padding-left:50px;">
+                                    - {{ temphierarchy[0].FacilityName }}
+                                </div>
+                            </div>
+                            <div class="col-md-1 col-lg-1 topDashBoard3" style="padding:0px">
+                                <button type="button" ng-click="logout()" id="btnLogin" class="btn-logout btn-warning"
+                                        style="background-color:chocolate; font-size:8px;
+                                    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                                    {{dashboardLanguages['logout']}}
+                                </button>
+                            </div>
+
+                            <!--<a href="#SetLanguage">
+
+                                <span style="color:saddlebrown; font-size: 12px">
+                                    {{dashboardLanguages['setLanguage']}}
+                                </span>
+
+                            </a>-->
+                        </div>
+                    </div>
+                </div>
+                <nav class="navbar navbar-default" role="navigation" style="background-color:white">
+                    <ul class="nav navbar-nav navbar-toggler home-nav" ng-show="true"
+                        style="margin-right: 0px; margin-left: 0px;margin-top: 0px;margin-bottom: 0px;">
+
+                        <li>
+                            <a href="#home" ng-class="toggleActive()" id="nav-home" class="btn dropdown-toggle btn-info "
+                               style="background-color: gold; background-repeat: no-repeat;
+                                      background-image:url(images/home/home.png); border-color:#ce9e9c; background-position:top center;
+                                      color:black; font-family:Verdana; font-size: 13px; justify-content:flex-end">
+                                {{dashboardLanguages['home']}}
+
+                            </a>
+                        </li>
+                        <li>
+                            <span style="padding-right:10px"></span>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle btn btn-info btn-block" id="nav-config" data-toggle="dropdown"
+                               role="button" aria-haspopup="true" aria-expanded="false"
+                               style="background-color: gold; background-repeat: no-repeat;
+                                      background-image:url(images/home/configuration.png); border-color:#ce9e9c; background-position:top center;
+                                      color:black; font-family:Verdana; font-size: 13px; justify-content:flex-end">
+                                <!--<div style="padding-bottom:0px; padding-top:8px; text-align:center">-->
+                                {{dashboardLanguages['configuration']}}
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li ng-show="USER.UserId == 'ROOT'">
+                                    <a href="#SiteSetting" ng-class="toggleActive()">
+                                        {{dashboardLanguages['locationSettings']}}
+                                    </a>
+                                </li>
+
+                                <li><a href="#SiteSettingTemporary" ng-class="toggleActive()">{{dashboardLanguages['setWorkingLocation']}}</a></li>
+                                <li><a href="#DenominatorsEntry" ng-class="toggleActive()">{{dashboardLanguages['denominatorDataEntryImport']}}</a></li>
+                                <li><a href="#ValidationsIndicators" ng-class="toggleActive()">{{dashboardLanguages['validationsIndicatorsAdministration']}}</a></li>
+                                <li><a href="#Users" ng-class="toggleActive()">{{dashboardLanguages['userAdministration']}}</a></li>
+                                <li ng-show="temphierarchy[0].FacilityTypeId != 1 && temphierarchy[0].FacilityTypeId != 3 ">
+                                    <a href="#ManageInstitution" ng-class="toggleActive()">{{dashboardLanguages['manageInstitutions']}}</a>
+                                </li>
+                                <li><a href="#Backups" ng-class="toggleActive()">{{dashboardLanguages['backupAndRestore']}}</a></li>
+                                <li><a href="#SetLanguage" ng-class="toggleActive()">{{dashboardLanguages['setLanguage']}}</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span style="padding-right:10px"></span>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle btn btn-info" id="nav-data" data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false"
+                               style="background-color: gold; background-repeat: no-repeat; background-position:top center;
+                                      background-image:url(images/home/dataentry.png);
+                                      border-color:#ce9e9c; color:black; font-size: 13px; font-family:Verdana">
+                                {{dashboardLanguages['dataentry']}}
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="">{{dashboardLanguages['service']}}</a>
+                                    <ul class="dropdown-submenu">
+                                        <li><a ng-class="toggleActive()" href="#serviceDataEntry">{{dashboardLanguages['monthly']}}</a></li>
+                                        <li><a ng-class="toggleActive()" href="#serviceDataEntryQuarter">{{dashboardLanguages['quarterly']}}</a></li>
+                                        <li><a ng-class="toggleActive()" href="#serviceDataEntryAnnual">{{dashboardLanguages['annual']}}</a></li>
+                                    </ul>
+                                </li>
+                                <li ng-if="temphierarchy[0].FacilityTypeId !=11 &&
+                                    temphierarchy[0].FacilityTypeId !=10 &&
+                                    temphierarchy[0].FacilityTypeId !=9 &&
+                                     temphierarchy[0].FacilityTypeId !=8">
+                                    <a ng-class="toggleActive()" href="#opdDataEntry">{{dashboardLanguages['opd']}}</a>
+                                    <ul class="dropdown-submenu">
+                                        <li><a ng-class="toggleActive()" href="#opdDataEntryMonthly">{{dashboardLanguages['monthly']}}</a></li>
+                                    </ul>
+                                </li>
+                                <li ng-if="temphierarchy[0].FacilityTypeId !=11 &&
+                                    temphierarchy[0].FacilityTypeId !=10 &&
+                                    temphierarchy[0].FacilityTypeId !=9 &&
+                                     temphierarchy[0].FacilityTypeId !=8">
+                                    <a ng-class="toggleActive()" href="#ipdDataEntry">{{dashboardLanguages['ipd']}}</a>
+                                    <ul class="dropdown-submenu">
+                                        <li><a ng-class="toggleActive()" href="#ipdDataEntry">{{dashboardLanguages['monthly']}}</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span style="padding-right:10px"></span>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle btn btn-info" id="nav-indicators" data-toggle="dropdown"
+                               role="button" aria-haspopup="true" aria-expanded="false"
+                               style="background-color: gold; background-repeat: no-repeat; background-position:top center;
+                                      background-image:url(images/home/reports.png);
+                                      border-color:#ce9e9c; color:black; font-size: 13px; font-family:Verdana">
+                                {{dashboardLanguages['reportsIndicators']}}
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a ng-class="toggleActive()" href="#serviceReport">{{dashboardLanguages['service']}}</a></li>
+                                <li><a ng-class="toggleActive()" href="#opdReport">{{dashboardLanguages['opd']}}</a></li>
+                                <li><a ng-class="toggleActive()" href="#ipdReport">{{dashboardLanguages['ipd']}}</a></li>
+                                <li><a ng-class="toggleActive()" href="#customReport">{{dashboardLanguages['customReport']}}</a></li>
+                                <!--<li><a   ng-class="toggleActive()" href="#customReport_alt">customReport (Alt)</a></li>-->
+                            </ul>
+                        </li>
+                        <li>
+                            <span style="padding-right:10px"></span>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle btn btn-info" id="nav-charts" data-toggle="dropdown"
+                               role="button" aria-haspopup="true" aria-expanded="false"
+                               style="background-color: gold; background-repeat: no-repeat; background-position:top center;
+                                      background-image:url(images/home/analyltics.png);
+                                      border-color:#ce9e9c; color:black; font-size: 13px; font-family:Verdana">
+                                {{dashboardLanguages['analysisCharts']}}
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a ng-class="toggleActive()" href="#analytics">{{dashboardLanguages['dataAnalytics']}}</a></li>
+                                <li><a ng-class="toggleActive()" href="#gis">{{dashboardLanguages['gisMap']}}</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span style="padding-right:10px"></span>
+                        </li>
+                        <li>
+                            <a href="#home" ng-class="toggleActive()" id="nav-home" class="btn dropdown-toggle btn-info "
+                               style="background-color: gold; background-repeat: no-repeat; padding-right: 10px;
+                                      background-image:url(images/home/aboutus.png); border-color:#ce9e9c; background-position:top center;
+                                      color:black; font-family:Verdana; font-size: 13px; justify-content:flex-end">
+                                {{dashboardLanguages['aboutus']}}
+                            </a>
+                        </li>
+                        <li>
+                            <span style="padding-right:10px"></span>
+                        </li>
+                        <!--<li>
+                            <span style="padding:0px">
+                                <img class="img-responsive" src="images/topLeft.jpg" />
+                            </span>
+                        </li>-->
+                        <!--       <li><a href="#Help" ng-class="toggleActive()" id="nav-help" class="btn  dropdown-toggle btn-primary"><b>Help</b></a></li> -->
+                    </ul>
+                </nav>
+                <div class="panel panel-info">
+                    <div class="panel-body pnlNgView tab-pane"
+                         style="padding-top: 0px; padding-right: 10px;">
+                        <div ng-view>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3rd-Party SCRIPTS -->
+    <script src="js/libs/jquery/dist/jquery.min.js"></script>
+    <script src="js/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="js/libs/angular/angular.min.js"></script>
+    <script src="js/libs/angular-ui-grid/ui-grid.min.js"></script>
+    <script src="js/libs/angular-route/angular-route.min.js"></script>
+    <script src="js/libs/bootstrap-switch/dist/js/bootstrap-switch.min.js"></script>
+    <script src="js/libs/dirPagination/dirPagination.js"></script>
+    <script src="js/vendor/jquery.dataTables.min.js"></script>
+    <script src="js/vendor/dataTables.buttons.min.js"></script>
+    <script src="js/vendor/buttons.html5.min.js"></script>
+    <script src="js/vendor/jszip.min.js"></script>
+    <script src="js/vendor/pdfmake.min.js"></script>
+    <script src="js/vendor/vfs_fonts.js"></script>
+    <script src="js/vendor/js.cookie.js"></script>
+    <script src="js/libs/angular-loading-bar/build/loading-bar.min.js"></script>
+    <script src="js/libs/bootstrap/js/bootstrap-timepicker.min.js"></script>
+    <!-- NVD3 Libraries...-->
+    <script src="js/libs/nvd3/angular-nvd3.js"></script>
+    <script src="js/libs/nvd3/d3.min.js"></script>
+    <script src="js/libs/nvd3/nv.d3.min.js"></script>
+    <!-- NVD3 Libraries...-->
+    <!-- canvg-->
+    <script type="text/javascript" src="js/libs/canvg/rgbcolor.js"></script>
+    <!--<script type="text/javascript" src="js/libs/StackBlur.js"></script>-->
+    <script type="text/javascript" src="js/libs/canvg/canvg.js"></script>
+    <!-- end canvg -->
+
+    <script src="js/libs/jquery.calendars.package-2.0.2/jquery.calendars.js"></script>
+    <script src="js/libs/jquery.calendars.package-2.0.2/jquery.calendars.ethiopian.js"></script>
+    <script src="js/modal_alert.js"></script>
+
+    <!--<script src="js/vendor/The-Meliorator/src/js/meliorator.js"></script>-->
+    <script src="js/libs/angular-leaflet-directive/angular-leaflet-directive.js"></script>
+    <script src="js/libs/leaflet/leaflet.js"></script>
+    <!--<script src="js/libs/ng-dialog/js/ngDialog.js"></script>
+    <script src="js/libs/dashboard/malhar-angular-dashboard.js"></script>-->
+    <script src="js/libs/underscore/underscore.js"></script>
+    <!-- OUR OWN Angular/App scripts (order matters...) -->
+    <script src="js/mainApp.js"></script>
+
+    <!-- all required services -->
+    <script src="js/services/service_values.js"></script>
+    <script src="js/services/service_quarteropddisease.js"></script>
+    <script src="js/services/service_quarterhpopddisease.js"></script>
+    <script src="js/services/service_reports.js"></script>
+    <script src="js/services/service_SiteLocationReport.js"></script>
+    <script src="js/services/service_ipddisease.js"></script>
+    <script src="js/services/service_service.js"></script>
+    <script src="js/services/service_ipddisease.js"></script>
+    <script src="js/services/service_map.js"></script>
+    <script src="js/services/service_ipddisease.js"></script>
+    <script src="js/services/service_Analytics.js"></script>
+    <script src="js/services/service_plugins.js"></script>
+    <script src="js/services/service_denominator.js"></script>
+    <script src="js/services/service_authentication.js"></script>
+    <script src="js/services/service_facilityProfile.js"></script>
+    <script src="js/services/service_Language.js"></script>
+    <script src="js/services/service_HostConfig.js"></script>
+
+    <!-- all required controllers -->
+    <script src="js/controllers/controller_values.js"></script>
+    <script src="js/controllers/controller_quarteropddisease.js"></script>
+    <script src="js/controllers/controller_quarterhpopddisease.js"></script>
+    <script src="js/controllers/controller_reports.js"></script>
+    <script src="js/controllers/controller_SiteLocationReport.js"></script>
+    <script src="js/controllers/controller_ipdDisease.js"></script>
+    <script src="js/controllers/controller_opdDiseaseReport.js"></script>
+    <script src="js/controllers/controller_serviceReport.js"></script>
+    <script src="js/controllers/controller_service.js"></script>
+    <script src="js/controllers/controller_serviceannual.js"></script>
+    <script src="js/controllers/controller_servicequarter.js"></script>
+    <script src="js/controllers/controller_monthlyopddisease.js"></script>
+    <script src="js/controllers/selectionScript.js"></script>
+    <script src="js/controllers/controller_map.js"></script>
+    <script src="js/controllers/controller_Analytics.js"></script>
+    <script src="js/controllers/controller_monthlyipddisease.js"></script>
+    <script src="js/controllers/controller_newDataElementsEntry.js"></script>
+    <script src="js/controllers/controller_plugins.js"></script>
+    <script src="js/controllers/controller_authentication.js"></script>
+    <script src="js/controllers/controller_validata.js"></script>
+    <script src="js/controllers/controller_addFacility.js"></script>
+    <script src="js/controllers/controller_backupAndrestore.js"></script>
+    <script src="js/directives/directive_map.js"></script>
+    <script src="js/directives/directive_facilityProfile.js"></script>
+    <script src="js/controllers/controller_denominator.js"></script>
+    <script src="js/libs/filesaver/FileSaver.js"></script>
+    <script src="js/controllers/controller_Home.js"></script>
+
+    <div id="modalTemplate">
+        <!-- Modal -->
+        <div class="modal fade" id="{id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="vertical-alignment-helper">
+                <div class="modal-dialog vertical-align-center">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">&times;</span><span class="sr-only">OK</span>
+
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">{title}</h4>
+
+                        </div>
+                        <div class="modal-body">{message}</div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalContainer"></div>
+</body>
+</html>

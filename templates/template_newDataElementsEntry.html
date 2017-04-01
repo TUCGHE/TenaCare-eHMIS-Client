@@ -1,0 +1,297 @@
+﻿<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<body ng-app="eHMISApp" ng-controller="newDataElementsctrl">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h2 class="panel-title"> {{indicatorAdd['addNewDataElementsAndIndicators']}}</h2><br />
+                <div class="row">
+            
+                        <div>
+                          
+                            <div class="radio-inline" style="padding-left:10em; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:GrayText">
+                                <label><input type="radio" name="optradio" value="service" class="radio" ng-model="display">{{indicatorAdd['service']}}</label>
+                            </div>
+                            <div class="radio-inline" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:GrayText">
+                                <label><input type="radio" name="optradio" value="disease" ng-model="display">{{indicatorAdd['disease']}}</label>
+                            </div>
+                            <div class="radio-inline" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:GrayText">
+                                <label><input type="radio" name="optradio" value="indicator" ng-model="display">{{indicatorAdd['indicator']}}</label>
+                            </div>
+
+                        </div>
+                   
+
+                </div>
+            </div>
+        </div>
+        <div ng-show="display=='service'" class="container-fluid" style="border:groove 2px; border-color:ActiveBorder">
+            <div class="panel-body">
+                <div class="row">
+                    <label style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray; font-size:16px"> {{indicatorAdd['pleaseProvideNecessaryInformation']}}</label><br /><br />
+                    <div class="col-xs-4">
+                        <label for="xsName" style="font-family :'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray"> {{indicatorAdd['dataElementsName']}}</label>
+                        <input type="text" name="name" ng-model="name" class="form-control" id="xsName" />
+                    </div><br /><br /><br />
+                    <div class="col-xs-4">
+                        <label for="xsCategory" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray">{{indicatorAdd['categoryName']}}</label>
+                        <input type="text" name="catagory" ng-model="category" class="form-control" id="xsCategory" />
+                    </div><br /><br /><br />
+                    <div class="col-xs-4">
+                        <label for="xsType" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray"> {{indicatorAdd['dataElementsType']}}</label>
+                        <select ng-model="type" class="form-control" id="xsType">
+                            <option value="0">{{indicatorAdd['monthly']}}</option>
+                            <option value="1">{{indicatorAdd['quarterly']}}</option>
+                            <option value="2">{{indicatorAdd['annual']}}</option>
+                        </select>
+                    </div><br /><br /><br /><br />
+                    <div class="col-xs-2">
+                        <input type="submit" value={{indicatorAdd['submit']}} class="btn btn-primary btn-lg" ng-click="insertNewData(name, category, type)" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-show="display=='disease'" class="container-fluid" style="border:groove 2px; border-color:ActiveBorder">
+            <div class="panel-body">
+                <div class="row">
+                    <label style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray; font-size:16px">{{indicatorAdd['pleaseProvideNecessaryInformation']}} </label><br /><br />
+                    <div class="col-xs-4">
+                        <label for="xsDisease" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray">{{indicatorAdd['diseaseName']}} </label>
+                        <input type="text" name="diseaseName" ng-model="diseaseName" class="form-control" id="xsDisease" />
+                    </div><br /><br /><br /><br /><br />
+                    <div class="col-xs-2">
+                        <input type="submit" value={{indicatorAdd['submit']}} class="btn btn-primary btn-lg" ng-click="insertNewDisease(diseaseName)" />
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div ng-show="display=='indicator'" class="container-fluid" style="border:groove 2px; border-color:ActiveBorder">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="radio-inline" style="padding-left:10em; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:GrayText">
+                        <label><input type="radio" name="optradio1" value="numerator" class="radio" ng-model="displayData" ng-checked="numeratorTrue" ng-click="selectLabelDescription()">{{indicatorAdd['numerator']}}</label>
+                    </div>
+                    <div class="radio-inline" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:GrayText">
+                        <label><input type="radio" name="optradio1" value="denominator" ng-model="displayData" ng-disabled="EnableDenom">{{indicatorAdd['denominator']}}</label>
+                    </div>
+                    <div class="radio-inline" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:GrayText">
+                        <label><input type="radio" name="optradio1" value="action" ng-model="displayData">{{indicatorAdd['action']}}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-show="displayData=='numerator'" class="panel panel-default pnlNewIndicatorsEntry" style="border:groove 2px; border-color:ActiveBorder">
+            <div class="panel-body">
+                <div class="row">
+                    <table class="table" style="table-layout:fixed">
+                        <thead class="thead-inverse">
+                            <tr style="background-color:#4E6868; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:#DFEDED">
+                                <th>
+                                    {{indicatorAdd['numerator']}}
+                                    <input type="text" style="float:right; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:black" ng-model="searchKeyword" />
+                                    <label style="float:right">{{indicatorAdd['search']}}:&nbsp;&nbsp;   </label>
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="labelDescription in labelDescriptions | filter:searchKeyword">
+                                <td style="width:100px">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" ng-model="checkedDescriptionN" ng-click="collectSelection(displayData, labelDescription, checkedDescriptionN)">{{labelDescription.descrip}}</label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div ng-show="displayData=='denominator'" class="panel panel-default pnlNewIndicatorsEntry" style="border:groove 2px; border-color:ActiveBorder">
+            <div class="panel-body">
+                <div class="row">
+                    <table class="table table-condensed table-responsive" style="background-color:white">
+                        <thead>
+                            <tr style="background-color:#4E6868; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:#DFEDED">
+                                <th>
+                                    {{indicatorAdd['denominator']}}
+                                    <input type="text" style="float:right; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:black" ng-model="searchKeyword" />
+                                    <label style="float:right">{{indicatorAdd['search']}}:&nbsp;&nbsp;   </label>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="labelDescription in labelDescriptions | filter:searchKeyword">
+                                <td style="height:10px">
+                                    <div class="checkbox">
+                                        <label><input type="checkbox" ng-model="checkedDescription" ng-click="collectSelection(displayData, labelDescription, checkedDescription)">{{labelDescription.descrip}}</label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div ng-show="displayData=='action'" class="container-fluid" style="border:groove 2px; border-color:ActiveBorder">
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-4" style="padding-left:0em">
+
+                        <table style="padding-left:0em">
+                            <thead>
+
+                            </thead>
+                            <tbody>
+                                <tr style="background-color:#4E6868; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:#DFEDED">
+                                    <td>
+                                        {{indicatorAdd['numerator']}}
+                                    </td>
+                                    <td>
+                                        {{indicatorAdd['notation']}}
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="numerator in numeratorValues">
+                                    <td class="wrapword">
+                                        <div class="checkbox">
+                                            <label><input type="checkbox" ng-model="checkedNumerator" ng-click="numeratorAction(numerator, checkedNumerator)">{{numerator.Description}}</label>
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                        {{numerator.Notation}}
+                                    </td>
+                                </tr>
+                                <tr style="background-color:#4E6868; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:#DFEDED">
+                                    <td>
+                                        {{indicatorAdd['denominator']}}
+                                    </td>
+                                    <td>
+                                        {{indicatorAdd['notation']}}
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="denominator in denominatorValues">
+                                    <td class="wrapword">
+                                        <div class="checkbox">
+                                            <label><input type="checkbox" ng-model="checkedDenominator" ng-click="denominatorAction(denominator, checkedDenominator)">{{denominator.Description}}</label>
+                                        </div>
+
+                                    </td>
+                                    <td>
+                                        {{denominator.Notation}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-sm-8" style="border:groove 2px; border-color:ActiveBorder">
+
+                        <div class="col-sm-5">
+
+                            <label style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray">{{indicatorAdd['numerator']}}</label>
+                            <select ng-model="operation">
+                                <!--<option value="-"> - </option>
+                                <option value="+"> + </option>-->
+                                <option value="*"> * </option>
+                                <option value="/"> / </option>
+                            </select>
+                            <label style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray"> {{indicatorAdd['denominator']}}</label>
+                            <br /><br />
+
+                            <label style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray" ng-if="operation == '/'">
+                                <input type="checkbox" ng-model="percentaile" ng-click="percetageSelection(percentaile)" />{{indicatorAdd['percentile']}}
+                            </label>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <table>
+                                <thead>
+                                    <tr style="background-color:#4E6868; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:#DFEDED">
+                                        <td>{{indicatorAdd['numeratorAction']}}</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="numerator in numerators">
+                                        <td>
+                                            {{numerator.Notation}}
+                                            <select ng-if="numerator.showOptions" ng-model="numeratorActions" ng-change="collectActions(numeratorActions)">
+                                                <option value="-"> - </option>
+                                                <option value="+"> + </option>
+                                                <!--<option value="*"> * </option>
+                                                <option value="/"> / </option>-->
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                        <div class="col-sm-3">
+                            <table>
+                                <thead>
+                                    <tr style="background-color:#4E6868; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:#DFEDED">
+                                        <td>{{indicatorAdd['denominatorAction']}}</td>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="denominator in denominators">
+                                        <td>
+                                            {{denominator.Notation}}
+                                            <select ng-if="denominator.showOptions" ng-model="denominatorActions" ng-change="collectDenominatorActions(denominatorActions)">
+                                                <option value="-"> - </option>
+                                                <option value="+"> + </option>
+                                                <!--<option value="*"> * </option>
+                                                <option value="/"> / </option>-->
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+                    <br/><br/><br/><br/>
+                    <div class="col-sm-8">
+                        <label for="xsIndicator" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray"> {{indicatorAdd['indicatorName']}} </label>
+                        <input type="text" name="xsIndicator" ng-model="indicatorName" class="form-control" id="xsIndicator" />
+                        <label for="xsNumerator" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray"> {{indicatorAdd['numeratorName']}} </label>
+                        <input type="text" name="xsNumerator" ng-model="numeratorName" class="form-control" id="xsNumerator" />
+                        <label for="xsDenominator" style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color:dimgray"> {{indicatorAdd['denominatorName']}} </label>
+                        <input type="text" name="xsDenominator" ng-model="denominatorName" class="form-control" id="xsDenominator" /><br /><br />
+                        <input type="submit" value={{indicatorAdd['submit']}} class="btn btn-primary btn-lg" ng-click="insertNewIndicator(operation, indicatorName, numeratorName, denominatorName)" />
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+</body>

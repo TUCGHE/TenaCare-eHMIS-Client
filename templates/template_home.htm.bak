@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+	<div class="homeContainer" id = "home">	  	
+				<div class="row">				
+						<div class="col-md-12 homePage" style="background-color:lightgreen;">									
+								  <p class="center"> <a href="#home">Welcome to eHMIS  <img  class="img-responsive img-rounded" src="img/installer.ico" width = "60" height = "60"> 
+										(Electronic Health Management Information System) main page. </a>  </p>																
+									The system incorporates data collection, analysis and reporting on timely, accurately and efficient 
+									method at all level of the health institutions. The list below shows the different modules of the application.						   						 
+						</div>							
+				</div>
+				
+				<div class="row">	
+                    <div class="col-md-12">
+                        <div class="col-md-5 homePage" style="background-color:azure ;">
+                            <img src="img/configuration.jpg" class="img-responsive img-rounded" width="100" height="100">
+                            <a href="#SiteSetting">Configuration Module </a>  <br>
+                            This module allows users to Add Institution, Set Institution, Set Denominators, Yearly Targets, etc
+                        </div>
+                        <div class="col-md-5 homePage" style="background-color:azure ;">
+                            <img src="img/dataentry.jpg" class="img-responsive img-rounded" width="100" height="100">
+                            <a href="#dataentry">Data Entry Module </a>   <br>
+                            This module allows users to enter eHMIS (IPD, OPD, Service) data elements with validations which help with accuracy.
+                        </div>
+                    </div>
+                    </div>
+				  		  
+				<div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-5 homePage" style="background-color:azure;">
+                            <img src="img/report.jpg" class="img-responsive img-rounded" width="100" height="100">
+                            <a href="#">Report Module</a>   <br>
+                            This module allows users to generate standard and ad-hoc reports, import reports from
+                            other institutions and download reports that have been sent from other institutions via
+                            the network
+                        </div>
+                        <div class="col-md-5 homePage" style="background-color:azure;">
+                            <img src="img/charts.jpg" class="img-responsive img-rounded" width="100" height="100">
+                            <a href="#Analysis">Analysis, Charts and Maps Module</a>	<br>
+                            This module allows users to make analysis using indicators, charts and GIS mapping. The module is
+                            integrated with Power Business Intelligence module for flexible data analytics
+                        </div>
+                    </div>
+				</div>
+			 		  
+		   
+				<div class="row">	
+                    <div class="col-md-12">
+                        <div class="col-md-5 homePage" style="background-color:azure;">
+                            <img src="img/communication.jpg" class="img-responsive img-rounded" width="100" height="100">
+                            <a href="#">Communication Module</a> 	<br>
+                            This module allows users to view internet connection logs and exchange short messages
+
+                        </div>
+                        <div class="col-md-5 homePage" style="background-color:azure;">
+                            <img src="img/help.jpg" class="img-responsive img-rounded" width="100" height="100">
+                            <a href="#">Help</a> <br>
+                            Get access to system help for various tasks in the application. The help documentation is sub-divided based on the modules.
+
+                        </div>
+                    </div>			
+		 
+	</div>
+</body>
+</html>

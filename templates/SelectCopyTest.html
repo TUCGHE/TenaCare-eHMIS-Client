@@ -1,0 +1,117 @@
+﻿<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript: Select All</title>
+	<meta charset="utf-8" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <link rel="stylesheet" type="text/css" href="js/libs/angular-ui-grid/ui-grid.min.css" />
+    <link rel="stylesheet" type="text/css" href="js/libs/fontawesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="js/libs/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css" />
+    <link rel="stylesheet" href="css/vendor/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="css/vendor/buttons.dataTables.min.css">
+
+
+    <link rel="stylesheet" href="js/libs/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/eHMISMain.css">
+   
+    <script src="../js/controllers/selectionScript.js"></script>
+</head>
+<body>
+
+    <!--<script type="text/javascript">
+    function selectText(containerid) {
+        if (document.selection) {
+            var range = document.body.createTextRange();
+            range.moveToElementText(document.getElementById(containerid));
+            range.select();
+        } else if (window.getSelection) {
+            var range = document.createRange();
+            range.selectNode(document.getElementById(containerid));
+            window.getSelection().addRange(range);
+        }
+
+        document.execCommand('copy');
+    }
+    </script>-->
+
+    <div id="selection" onclick="selectAndCopyElement('selection')">        
+        <table id="reportTable" width:"100%" style="padding:0px" class="table table-hover table-responsive" border="5">
+            <thead>
+                <tr style="background-color:lightcyan">
+                    <th>
+                        Merra Test1
+                    </th>
+                    <th>
+                        Merra Test2
+                    </th>
+                    <th>
+                        Merra Test2
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="background-color:lightcyan">
+                        Merra Test1
+                    </td>
+                    <td>
+                        Merra Test2
+                    </td>
+                    <td style="background-color:lightblue">
+                        Merra Test3
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background-color:lightgray">
+                        300
+                    </td>
+                    <td style="background-color:lightgreen">
+                        300
+                    </td>
+                    <td style="background-color:lightblue">
+                        300
+                    </td>
+                </tr>
+                <tr>
+                    <td style="background-color:lightgray">
+                        300
+                    </td>
+                    <td style="background-color:lightgreen">
+                        300
+                    </td>
+                    <td style="background-color:red">
+                        300
+                    </td>
+                </tr>
+            </tbody>
+        </table>       
+    </div>
+</body>
+</html>

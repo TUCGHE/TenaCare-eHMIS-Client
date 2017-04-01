@@ -1,0 +1,242 @@
+<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<div class="page-title">{{title}}</div>
+<div ng-app="eHMISApp" ng-controller="ipdDiseaseCtrl">
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-2" style="padding: 0px; margin: 0px">
+                    <label class="common-font"> {{dataEntry['period']}}:</label>
+                    <select data-ng-options="p.name for p in periodOptions"
+                            ng-model="selectedPeriod" ng-change="ChangePeriod()" style="height:30px;"></select>
+                </div>
+                <div class="col-sm-10" ng-show="showMonthlyReport" style="padding-left: 0px;">
+                    <label class="common-font">
+                        {{dataEntry['startMonth']}}:
+                    </label> <select data-ng-options="o.name for o in options" data-ng-model="selectedMonth"
+                                     style="height:30px;"></select>
+
+                    <label class="common-font">
+                        {{dataEntry['endMonth']}}:
+                    </label> <select data-ng-options="o.name for o in options" data-ng-model="selectedMonthEnd"
+                                     style="height:30px;"></select>
+                    <label class="common-font">
+                        {{dataEntry['fiscalYear']}}:
+                    </label> <input type="number" name="month1" max="2020" min="1999" ng-model="selectedYear" />
+                </div>
+
+                <div class="col-sm-10" ng-show="showQuarterReport" style="padding-left: 0px;">
+                    <label class="common-font">{{dataEntry['startQuarter']}}:</label>
+                    <select data-ng-options="o.name for o in quarterOptions" data-ng-model="selectedQuarter" style="height:30px;"></select>
+                    <label class="common-font">{{dataEntry['endQuarter']}}:</label>
+                    <select data-ng-options="o.name for o in quarterOptions" data-ng-model="quarterEnd" style="height:30px;"></select>
+                    <label class="common-font">{{dataEntry['fiscalYear']}}:</label>
+                    <input type="number" name="month1" style="width:90px; height:30px;" max="2019" min="2001" ng-model="selectedYear" />
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-12" style="padding: 0px; margin: 0px">
+                    <input class="btn btn-primary navspecial" type="submit" value={{dataEntry['generate']}} ng-click="getIpdReport(1,selectedMonth.value, selectedMonthEnd.value, 0, 0, selectedYear, checkedState)" ng-show="showMonthlyReport" style="width:80px" />
+                    <input class="btn btn-primary navspecial" type="submit" value={{dataEntry['generate']}} ng-click="getIpdReport(1,0,0, selectedQuarter.value, quarterEnd.value, selectedYear, checkedState)" ng-show="showQuarterReport" style="width:80px" />
+                    <button class="btn btn-primary navspecial" onclick="selectAndCopyElement('selection')">{{dataEntry['copyWithFormat']}}</button>
+                    <input class="btn-setLocation" type="checkbox" name="enableCache" ng-model="checkedState" ng-init="checkedState=true" />{{dataEntry['enableCache']}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default pnlServiceEntry">
+        <div class="panel-body">
+            <div class="col-sm-8" ng-if="!showReport">
+            </div>
+            <div id="selection" class="row" ng-if="showReport">
+                <div class="loading-dialog" data-loading="">
+                </div>
+                <table id="reportTable" class="table table-condensed table-responsive" style="background-color:white; padding:0px" width:"100%">
+                    <thead>
+                        <tr>
+                            <th colspan="14" style="font-size: 16px; background-color:white">
+                                <!--<div style="float:left; width:50%">
+                                    <img src="/web-app/img/eHMIS.jpg1" alt="" />
+                                </div>-->
+                                <div style="float:left; width:50%; text-align:center; font-size:12px; font-family:'Times New Roman'; color:#1E5B78">
+                                    <h5><b>{{LocationName}}<br /> {{reportString}}<br />  {{dataEntry['year']}}: {{selectedYear}}, {{reportType}}</b></h5>
+                                </div>
+                            </th>
+                        </tr>
+                        <tr style="background-color:#4E6868; color:#DFEDED">
+                            <th rowspan="2"></th>
+                            <th rowspan="2"></th>
+                            <!--<th class="text-center"> </th>
+                            <th class="text-center"> </th-->
+                            <th colspan="6" class="text-center">{{dataEntry['morbidityInIpd']}}</th>
+                            <th colspan="6" class="text-center">{{dataEntry['mortalityInIpd']}}</th>
+                        </tr>
+                        <tr style="background-color:#4E6868; color:#DFEDED">
+                            <!--<th class="text-center"> </th>
+                            <th class="text-center"> </th>-->
+                            <th colspan="3" class="text-center">{{dataEntry['male']}}</th>
+                            <th colspan="3" class="text-center">{{dataEntry['female']}}</th>
+                            <th colspan="3" class="text-center">{{dataEntry['male']}}</th>
+                            <th colspan="3" class="text-center">{{dataEntry['female']}}</th>
+                        </tr>
+                        <tr>
+                            <th> {{dataEntry['icd10']}} </th>
+                            <th> {{dataEntry['disease']}} </th>
+                            <th> 0-4 {{dataEntry['years']}} </th>
+                            <th> 5-14 {{dataEntry['years']}} </th>
+                            <th> >15 {{dataEntry['years']}} </th>
+                            <th> 0-4 {{dataEntry['years']}} </th>
+                            <th> 5-14 {{dataEntry['years']}} </th>
+                            <th> >15 {{dataEntry['years']}} </th>
+                            <th> 0-4 {{dataEntry['years']}} </th>
+                            <th> 5-14 {{dataEntry['years']}} </th>
+                            <th> >15 {{dataEntry['years']}} </th>
+                            <th> 0-4 {{dataEntry['years']}} </th>
+                            <th> 5-14 {{dataEntry['years']}} </th>
+                            <th> >15 {{dataEntry['years']}} </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="x in ipdReportdata[1]" end-of-repeat-directive>
+                            <td class="tableFormat" ng-if="x.Format===1 || x.Format === '1'">
+                                <div>
+                                    {{ x.SNO }}
+                                </div>
+                            </td>
+                            <td class="table0" ng-if="x.Format != 1">
+                                <div>
+                                    {{ x.SNO }}
+                                </div>
+                            </td>
+                            <!-- Disease -->
+                            <td class="tableFormat" ng-if="x.Format === 1 || x.Format === '1'">
+                                <div>
+                                    {{ x.Disease }}
+                                </div>
+                            </td>
+                            <td class="table1" ng-if="x.Format != 1">
+                                <div>
+                                    {{ x.Disease }}
+                                </div>
+                            </td>
+                            <!-- M04 -->
+                            <td class="tableFormat" ng-if="x.Format === 1 || x.Format === '1'"></td>
+                            <td class="td" ng-if="x.Format != 1">
+                                <div ng-if="x.M04 != -999">
+                                    {{ x.M04 }}
+                                </div>
+                            </td>
+                            <!-- M514 -->
+                            <td class="tableFormat" ng-if="x.Format === 1 || x.Format === '1'"></td>
+                            <td class="table3" ng-if="x.Format != 1">
+                                <div ng-if="x.M514 != -999">
+                                    {{ x.M514 }}
+                                </div>
+                            </td>
+                            <!-- M15 -->
+                            <td class="tableFormat" ng-if="x.Format === 1 || x.Format === '1'"></td>
+                            <td class="table3" ng-if="x.Format != 1">
+                                <div ng-if="x.M15 != -999">
+                                    {{ x.M15 }}
+                                </div>
+                            </td>
+                            <!-- F04-->
+                            <td class="tableFormat" ng-if="x.Format === 1 || x.Format === '1'"></td>
+                            <td class="female" ng-if="x.Format != 1">
+                                <div ng-if="x.F04 != -999">
+                                    {{ x.F04 }}
+                                </div>
+                            </td>
+                            <!-- F514 -->
+                            <td class="tableFormat" ng-if="x.Format === 1 || x.Format === '1'"></td>
+                            <td class="female" ng-if="x.Format != 1">
+                                <div ng-if="x.F514 != -999">
+                                    {{ x.F514 }}
+                                </div>
+                            </td>
+                            <!-- F15 -->
+                            <td class="tableFormat" ng-if="x.Format === 1 || x.Format === '1'"></td>
+                            <td class="female" ng-if="x.Format != 1">
+                                <div ng-if="x.F15 != -999">
+                                    {{ x.F15 }}
+                                </div>
+                            </td>
+
+                            <!-- MM04 -->
+                            <td class="tableFormat" ng-if="x.Format === 1 || x.Format === '1'"></td>
+                            <td class="table2" ng-if="x.Format != 1">
+                                <div ng-if="x.MM04 != -999">
+                                    {{ x.MM04 }}
+                                </div>
+                            </td>
+
+                            <!-- MM514 -->
+                            <td class="tableFormat" ng-if="x.Format === 1 || x.Format === '1'"></td>
+                            <td class="table3" ng-if="x.Format != 1 ">
+                                <div ng-if="x.MM514 != -999">
+                                    {{ x.MM514 }}
+                                </div>
+                            </td>
+                            <!-- MM15 -->
+                            <td class="tableFormat" ng-if="x.Format === 1 || x.Format === '1'"></td>
+                            <td class="table3" ng-if="x.Format != 1 ">
+                                <div ng-if="x.MM15 != -999">
+                                    {{ x.MM15 }}
+                                </div>
+                            </td>
+
+                            <!-- MF04 -->
+                            <td class="tableFormat" ng-if="x.Format === 1 || x.Format === '1'"></td>
+                            <td class="female" ng-if="x.Format != 1">
+                                <div ng-if="x.MF04 != -999">
+                                    {{ x.MF04 }}
+                                </div>
+                            </td>
+
+                            <!-- MF514 -->
+                            <td class="tableFormat" ng-if="x.Format === 1 || x.Format === '1'"></td>
+                            <td class="female" ng-if="x.Format != 1">
+                                <div ng-if="x.MF514  != -999">
+                                    {{ x.MF514 }}
+                                </div>
+                            </td>
+                            <!-- MF15 -->
+                            <td class="tableFormat" ng-if="x.Format === 1 || x.Format === '1'"></td>
+                            <td class="female" ng-if="x.Format != 1">
+                                <div ng-if="x.MF15 != -999">
+                                    {{ x.MF15 }}
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

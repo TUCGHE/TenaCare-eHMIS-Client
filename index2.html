@@ -1,0 +1,191 @@
+﻿<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Nu-EHMIS</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <link rel="stylesheet" href="js/libs/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="js/libs/angular-ui-grid/ui-grid.min.css" />
+    <link rel="stylesheet" type="text/css" href="js/libs/fontawesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="js/libs/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch.min.css" />
+
+
+    <!-- a better bootstrap theme than the default? -->
+    <!-- link rel="stylesheet" href="js/libs/bootstrap/dist/css/bootstrap-theme.min.css" -->
+    <link rel="stylesheet" href="css/theme/cosmo/bootstrap.min.css">    
+    <link rel="stylesheet" href="css/main.css">
+
+    <script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+
+</head>
+<body>
+
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#start">
+                    <img src="img/App.ico" class="img-circle img-responsive" style="height: 30px; display: inline-block" title="Nu-EHMIS" />
+                    EHMIS</a>
+            </div>
+
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-cogs"></i>Configuration <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Set Institution</a></li>
+                            <li><a href="#">Add Institution</a></li>
+                            <li><a href="#">Set Denominators</a></li>
+                            <li><a href="#">Set Yearly Target</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Set Communication</a></li>
+                            <li><a href="#">Backup and Restore</a></li>
+                            <li><a href="#">Platform Updates</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-pencil-square-o"></i>Data Entry <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">OPD Disease Data Entry</a></li>
+                            <li><a href="#">IPD Disease Data Entry</a></li>
+                            <li><a href="#">Monthly Service Delivery Data Entry</a></li>
+                            <li><a href="#quarteropddisease">Quarterly Service Data Entry</a></li>
+                            <li><a href="#quarterhpopddisease">Quarterly Health Post Service Data Entry</a></li>
+                            <li><a href="#">Annual Service Data Entry</a></li>
+                            <li><a href="#">PHEM Data Entry</a></li>
+
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#values">(Demo) Manage Values</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-line-chart"></i>Reports/Indicators <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#reports">Reports</a></li>
+                            <li><a href="#">Reports Status</a></li>
+                            <li><a href="#">Custom Reports/Indicators & Charts</a></li>
+                            <li><a href="#">PHEM Custom Report</a></li>
+                            <li><a href="#">IVR(PHEM/MNCH/STOCKOUT)</a></li>
+                            <li><a href="#">Import/Download Reports</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-pie-chart"></i>Analysis/Charts <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Charts</a></li>
+                            <li><a href="#">Map</a></li>
+                            <li><a href="#">Analytics</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-comments"></i>Communication <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">View Internet Connection Log</a></li>
+                            <li><a href="#">Short Message Exchange</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="#start"><i class="fa fa-help"></i>HELP</a></li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">MORE...<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Administration</a></li>
+                            <li><a href="#">Health Facility Ref</a></li>
+                            <li><a href="#">Change Password</a></li>
+                            <li><a href="#">About eHMIS-PHEM</a></li>
+                            <li><a href="#">HELP</a></li>
+                            <li><a href="#">Logout</a></li>
+                        </ul>
+                    </li>
+
+                </ul>              
+            </div>
+            <!-- /.navbar-collapse -->
+
+        </div>
+    </nav>
+
+    <div id="main-content" class="container">
+
+        <div ng-app="eHMISApp">
+            <ng-view></ng-view>
+        </div>
+
+
+    </div>
+    <!-- /container -->
+
+    <!-- 3rd-Party SCRIPTS -->
+    <script src="js/libs/jquery/dist/jquery.min.js"></script>
+    <script src="js/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="js/libs/angular/angular.min.js"></script>
+    <script src="js/libs/angular-ui-grid/ui-grid.min.js"></script>
+    <script src="js/libs/angular-route/angular-route.min.js"></script>
+     <script src="js/libs/bootstrap-switch/dist/js/bootstrap-switch.min.js"></script>
+
+    <!-- OUR OWN Angular/App scripts (order matters...) -->
+    <script src="js/app.js"></script>
+
+    <!-- all required services -->
+    <script src="js/services/service_values.js"></script>
+    <script src="js/services/service_quarteropddisease.js"></script>
+    <script src="js/services/service_quarterhpopddisease.js"></script>
+    <script src="js/services/service_reports.js"></script>
+
+    <!-- all required controllers -->
+    <script src="js/controllers/controller_values.js"></script>
+    <script src="js/controllers/controller_start.js"></script>
+    <script src="js/controllers/controller_quarteropddisease.js"></script>
+    <script src="js/controllers/controller_quarterhpopddisease.js"></script>
+    <script src="js/controllers/controller_reports.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!--
+    /*
+ *
+ * Copyright © 2006-2017 TenaCareeHMIS  software, by The Administrators of the Tulane Educational Fund,
+ * dba Tulane University, Center for Global Health Equity is distributed under the GNU General Public License(GPL).
+ * All rights reserved.
+
+ * This file is part of TenaCareeHMIS
+ * TenaCareeHMIS is free software:
+ *
+ * you can redistribute it and/or modify it under the terms of the
+ * GNU General Public License as published by the Free Software Foundation,
+ * version 3 of the License, or any later version.
+ * TenaCareeHMIS is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.See the GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License along with TenaCareeHMIS.
+ * If not, see http://www.gnu.org/licenses/.
+ *
+ *
+ */
+
+-->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+<div ng-app="eHMISApp" ng-controller="analyticsCtrl">
+    <div class="row row-eq-height">
+        <div class="col-md-12 homePage" style="background-color:lightgreen;">            
+            <button style="align-content:center" ng-click="getDashBoardItems()">Click to view Available Dashboards</button>
+            <br />                         
+            <div ng-repeat="dashBoard in dashBoardLists" class="AnalyticsDashboard">
+                <div class="row row-eq-height AnalyticsDashboard">
+                    <div class="col-md-6">
+                        <div>
+                            <!--<button ng-click="setDashBoardImage(fileName.FileName)" class="btn btn-primary">-->
+                            <h5>{{dashBoard.ChartName}}</h5>
+                            <!--</button>-->
+                        </div>
+                        <div>
+                            <!--<img src="img/Dashboards/{{fileName.FileName}}" width="500" height="320">-->
+                            <nvd3 options="chartOptionsDashBoard(dashBoard,$index)" data="chartDataDashBoard(dashBoard,$index)" config="config"
+                                  events="events" api="api">
+                            </nvd3>
+                        </div>
+                    </div>
+                </div>
+            </div>                  
+        </div>
+    </div>
+</div>
+</body>
+</html>
